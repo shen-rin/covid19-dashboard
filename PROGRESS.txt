@@ -1,0 +1,68 @@
+COVID-19 Dashboard — Project Progress Log
+==========================================
+
+[STEP 1 — DATA ACQUISITION]  ✓ Done
+  - Source: Our World in Data (OWID) COVID-19 dataset (WHO-based)
+  - URL: https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv
+  - Raw file: owid-covid-raw.csv (98 MB, 429 436 rows, 67 columns)
+  - 40 countries selected: Russia + major nations + all world/regional aggregates
+  - Key columns extracted: date, new_cases_smoothed, new_deaths_smoothed,
+    total_cases, total_deaths, people_vaccinated_per_hundred, population
+  - Data aggregated to weekly intervals → covid-data.json (741 KB)
+  - Special attention: Russia (RUS) included with full detail
+
+[STEP 2 — DATA STORY]  ✓ Defined
+  Main message:
+    Russia officially recorded 403 000 COVID deaths — highest in Europe —
+    while vaccinating only 61% of its population (~20 pp below EU average).
+  Supporting message 1:
+    The Omicron wave (Jan 2022) drove global weekly cases to 6.3M+,
+    yet death rates fell sharply everywhere as vaccines reduced severity.
+  Supporting message 2:
+    Russia's vaccination rate (61%) trailed France (81%) and Germany (78%)
+    by 20 percentage points, correlating directly with higher mortality.
+
+[STEP 3 — DASHBOARD BUILT]  ✓ Done  →  index.html
+  Technology: Vanilla HTML + CSS + JavaScript + Chart.js 4.4.4 (CDN)
+  Single page, no build step required.
+
+  Sections:
+    a) Hero header — title + 4 KPI cards:
+         Global Cases | Global Deaths | Russia Deaths | Russia Vaccination %
+    b) Main Finding banner (Russia main message, highlighted in red)
+    c) Interactive Timeline Chart:
+         - 7-day smoothed new cases / deaths, 2020–2024
+         - Toggle: Cases ↔ Deaths
+         - Toggle: Absolute ↔ Per Million population
+         - 9 country/region chips to add/remove lines (World, Russia,
+           Europe, USA, Germany, France, UK, India, Brazil)
+         - Russia line always drawn thicker and in red
+    d) Geographic Perspective (2-column):
+         - Regional bar chart: cumulative cases (M) + deaths (K) per region
+         - Europe deaths per million horizontal bar — Russia in red, sorted desc
+    e) Two supporting insight cards (Omicron Jan 2022 / vaccination gap)
+    f) Vaccination Race horizontal bar chart:
+         - 15 countries, peak single-dose %, Russia highlighted in red
+
+  Design: Dark theme (#080c14), Russia accent (#ff4040), business-professional palette.
+
+[STEP 4 — PROJECT SETUP]  ✓ Done
+  - git init + staged all deployment files
+  - vercel.json  — static site routing + cache headers
+  - package.json — minimal project descriptor
+  - .vercelignore — excludes raw CSV files (98 MB) from deployment
+  - .gitignore   — excludes raw/processed CSVs
+
+[STEP 4b — GITHUB PUSH]  ✓ Done
+  - Repo created: https://github.com/shen-rin/covid19-dashboard
+  - Git config: user=shen-rin, email=7760845@gmail.com
+  - Commit: de6bb96 "Initial commit: COVID-19 pandemic dashboard"
+  - Files pushed: index.html, covid-data.json, vercel.json, package.json,
+                  .gitignore, .vercelignore
+  - Raw CSV files (98 MB) excluded via .gitignore/.vercelignore
+
+[STEP 5 — VERCEL DEPLOYMENT]  ⏳ In Progress
+  - Method: Vercel web UI → Import from GitHub (no CLI needed)
+  - Repo to import: shen-rin/covid19-dashboard
+  - Settings: no build command, no framework (pure static site)
+  - Expected URL: https://covid19-dashboard-xxxx.vercel.app

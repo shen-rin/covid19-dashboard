@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,13 +8,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── DARK (default) ── */
     :root {
-      --bg:      #080c14;
-      --surf:    #0f1623;
-      --surf2:   #162033;
-      --border:  #1e2d45;
-      --text:    #e8f0fe;
-      --dim:     #7a9ac0;
+      --bg:      #111111;
+      --surf:    #1c1c1c;
+      --surf2:   #242424;
+      --border:  #333333;
+      --text:    #e8e8e8;
+      --dim:     #888888;
+      --hero-bg: #141414;
+      --hero-mid:#1a1a1a;
       --russia:  #ff4040;
       --cyan:    #4dd0e1;
       --purple:  #a46ef0;
@@ -25,42 +28,85 @@
       --gold:    #ffd32a;
     }
 
+    /* ── LIGHT ── */
+    [data-theme="light"] {
+      --bg:      #f0f0f0;
+      --surf:    #ffffff;
+      --surf2:   #e8e8e8;
+      --border:  #cccccc;
+      --text:    #1a1a1a;
+      --dim:     #666666;
+      --hero-bg: #e4e4e4;
+      --hero-mid:#dcdcdc;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      min-height: 100vh;
+      transition: background .25s, color .25s;
     }
 
     /* ─── HERO ─── */
     .hero {
-      background: linear-gradient(135deg, #0a0e1a 0%, #15002b 55%, #0a0e1a 100%);
+      background: linear-gradient(135deg, var(--hero-bg) 0%, var(--hero-mid) 55%, var(--hero-bg) 100%);
       border-bottom: 1px solid var(--border);
       padding: 2.5rem 2rem 2rem;
+      transition: background .25s;
     }
-    .hero-inner { max-width: 1160px; margin: 0 auto; }
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .hero-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
 
     .badge {
       display: inline-flex; align-items: center; gap: .4rem;
       border: 1px solid var(--russia); border-radius: 3px;
       color: var(--russia); font-size: .65rem; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase;
-      padding: .2rem .7rem; margin-bottom: 1.1rem;
+      padding: .2rem .7rem;
     }
-    .badge::before { content:''; display:block; width:6px; height:6px;
-      border-radius:50%; background:var(--russia); animation: pulse 1.4s infinite; }
+    .badge::before {
+      content:''; display:block; width:6px; height:6px;
+      border-radius:50%; background:var(--russia);
+      animation: pulse 1.4s infinite;
+    }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ─── THEME TOGGLE ─── */
+    .theme-btn {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--dim);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .35rem .9rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+    .theme-btn:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
 
     .hero h1 {
       font-size: clamp(1.5rem, 3.5vw, 2.6rem);
       font-weight: 900; line-height: 1.15; margin-bottom: .5rem;
     }
     .hero h1 em { font-style: normal; color: var(--russia); }
-
-    .hero-sub {
-      color: var(--dim); font-size: .88rem; margin-bottom: 2rem;
-    }
+    .hero-sub { color: var(--dim); font-size: .88rem; margin-bottom: 2rem; }
 
     .kpi-row {
       display: grid;
@@ -70,9 +116,11 @@
     .kpi {
       background: var(--surf2); border: 1px solid var(--border);
       border-radius: 9px; padding: 1.1rem 1.3rem;
+      transition: background .25s, border-color .25s;
     }
-    .kpi.accent { border-color: var(--russia);
-      background: linear-gradient(135deg, var(--surf2), rgba(255,64,64,.06)); }
+    .kpi.accent {
+      border-color: var(--russia);
+    }
     .kpi-lbl {
       font-size: .62rem; font-weight: 700; letter-spacing: .09em;
       text-transform: uppercase; color: var(--dim); margin-bottom: .45rem;
@@ -81,9 +129,12 @@
       font-size: 2rem; font-weight: 800; line-height: 1;
       font-variant-numeric: tabular-nums;
     }
-    .kpi .kpi-val { color: var(--cyan); }
+    .kpi .kpi-val      { color: var(--cyan); }
     .kpi.deaths .kpi-val { color: #ff7070; }
     .kpi.accent .kpi-val { color: var(--russia); }
+    [data-theme="light"] .kpi .kpi-val      { color: #0090a8; }
+    [data-theme="light"] .kpi.deaths .kpi-val { color: #cc2222; }
+    [data-theme="light"] .kpi.accent .kpi-val { color: var(--russia); }
     .kpi-note { font-size: .72rem; color: var(--dim); margin-top: .35rem; }
 
     /* ─── MAIN ─── */
@@ -92,8 +143,11 @@
     /* ─── FINDING BANNER ─── */
     .finding {
       border-left: 3px solid var(--russia);
-      background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.03));
+      background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.02));
       border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-bottom: 2rem;
+    }
+    [data-theme="light"] .finding {
+      background: linear-gradient(90deg, rgba(255,64,64,.08), rgba(255,64,64,.01));
     }
     .finding .tag {
       font-size: .6rem; font-weight: 700; letter-spacing: .12em;
@@ -115,19 +169,18 @@
     .card {
       background: var(--surf); border: 1px solid var(--border);
       border-radius: 10px; padding: 1.4rem;
+      transition: background .25s, border-color .25s;
     }
-
     .card-head {
       display: flex; align-items: flex-start;
       justify-content: space-between; gap: 1rem;
       flex-wrap: wrap; margin-bottom: 1rem;
     }
     .card-title { font-size: .88rem; font-weight: 700; }
-    .card-sub { font-size: .72rem; color: var(--dim); margin-top: .15rem; }
+    .card-sub   { font-size: .72rem; color: var(--dim); margin-top: .15rem; }
 
     /* ─── CONTROLS ─── */
     .ctrl-row { display: flex; gap: .5rem; flex-wrap: wrap; }
-
     .btn-grp {
       display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
     }
@@ -139,9 +192,10 @@
     }
     .btn-grp button:last-child { border-right: none; }
     .btn-grp button.on { background: var(--cyan); color: #000; }
+    [data-theme="light"] .btn-grp button.on { background: #0090a8; color: #fff; }
     .btn-grp button:hover:not(.on) { background: var(--surf2); color: var(--text); }
 
-    /* ─── CHIP TOGGLES ─── */
+    /* ─── CHIPS ─── */
     .chips { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .8rem; }
     .chip {
       display: flex; align-items: center; gap: .35rem;
@@ -151,10 +205,10 @@
       color: var(--dim); transition: all .12s; user-select: none;
     }
     .chip .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .chip.on { border-color: var(--chip-color); color: var(--chip-color);
-      background: rgba(var(--chip-rgb), .12); }
+    .chip.on   { border-color: var(--chip-color); color: var(--chip-color);
+                 background: rgba(var(--chip-rgb), .12); }
 
-    /* ─── CANVAS WRAPPERS ─── */
+    /* ─── CANVAS ─── */
     .cv { position: relative; }
 
     /* ─── GRID ─── */
@@ -169,11 +223,10 @@
     .ic {
       background: var(--surf); border: 1px solid var(--border);
       border-radius: 10px; padding: 1.3rem;
+      transition: background .25s, border-color .25s;
     }
-    .ic-num {
-      font-size: 2.6rem; font-weight: 900; color: var(--gold);
-      line-height: 1; margin-bottom: .5rem;
-    }
+    .ic-num  { font-size: 2.6rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: .5rem; }
+    [data-theme="light"] .ic-num { color: #c49000; }
     .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
     .ic-text strong { color: var(--text); }
 
@@ -190,7 +243,10 @@
 <!-- ═══════════ HERO ═══════════ -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
+    <div class="hero-top">
+      <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Light Mode</button>
+    </div>
 
     <h1>Russia Led Europe in Deaths,<br>
         <em>Not in Vaccines</em></h1>
@@ -215,7 +271,7 @@
       <div class="kpi">
         <div class="kpi-lbl">Russia Vaccination %</div>
         <div class="kpi-val" id="kRV">—</div>
-        <div class="kpi-note" id="kRVNote">vs EU average</div>
+        <div class="kpi-note">peak · EU avg ~80%</div>
       </div>
     </div>
   </div>
@@ -224,7 +280,6 @@
 <!-- ═══════════ MAIN ═══════════ -->
 <div class="main">
 
-  <!-- Main finding -->
   <div class="finding">
     <div class="tag">Main Finding</div>
     <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
@@ -234,7 +289,7 @@
       <strong>2–3× the official figure</strong>.</p>
   </div>
 
-  <!-- ── Section 1: Timeline ── -->
+  <!-- Timeline -->
   <div class="sec">
     <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / Deaths</div>
     <div class="card">
@@ -254,20 +309,17 @@
           </div>
         </div>
       </div>
-
       <div class="chips" id="chips"></div>
-
       <div class="cv" style="height:310px;margin-top:1.1rem">
         <canvas id="cTimeline"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- ── Section 2: Regional + Europe Deaths ── -->
+  <!-- Regional + Europe -->
   <div class="sec">
     <div class="sec-lbl">Geographic Perspective</div>
     <div class="two-col">
-
       <div class="card">
         <div class="card-head">
           <div>
@@ -279,7 +331,6 @@
           <canvas id="cRegional"></canvas>
         </div>
       </div>
-
       <div class="card">
         <div class="card-head">
           <div>
@@ -291,11 +342,10 @@
           <canvas id="cEurope"></canvas>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ── Supporting insight cards ── -->
+  <!-- Insight cards -->
   <div class="insight-row">
     <div class="ic">
       <div class="ic-num">Jan 2022</div>
@@ -316,7 +366,7 @@
     </div>
   </div>
 
-  <!-- ── Section 3: Vaccination Race ── -->
+  <!-- Vaccination -->
   <div class="sec">
     <div class="sec-lbl">Vaccination Progress — % Population with at Least One Dose (peak)</div>
     <div class="card">
@@ -341,7 +391,43 @@
 
 <script>
 /* ═══════════════════════════════════════════════════
-   CONSTANTS & STATE
+   THEME
+   ═══════════════════════════════════════════════════ */
+let isDark = true;
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeBtn').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  if (DATA) rebuildAllCharts();
+}
+
+function themeColors() {
+  return isDark ? {
+    grid:         '#33333366',
+    border:       '#333333',
+    tick:         '#888888',
+    tooltipBg:    '#1c1c1c',
+    tooltipBorder:'#333333',
+    tooltipTitle: '#888888',
+    tooltipBody:  '#e8e8e8',
+    labelColor:   '#e8e8e8',
+    axisLabel:    '#888888',
+  } : {
+    grid:         '#cccccc66',
+    border:       '#cccccc',
+    tick:         '#666666',
+    tooltipBg:    '#ffffff',
+    tooltipBorder:'#cccccc',
+    tooltipTitle: '#666666',
+    tooltipBody:  '#1a1a1a',
+    labelColor:   '#1a1a1a',
+    axisLabel:    '#666666',
+  };
+}
+
+/* ═══════════════════════════════════════════════════
+   DATA & STATE
    ═══════════════════════════════════════════════════ */
 const COUNTRY_CFG = [
   { name: 'World',          color: '#4dd0e1', rgb: '77,208,225',  on: true  },
@@ -355,11 +441,11 @@ const COUNTRY_CFG = [
   { name: 'Brazil',         color: '#1dd1a1', rgb: '29,209,161',  on: false },
 ];
 
-let DATA = null;
-let metric = 'cases';   // 'cases' | 'deaths'
-let scale  = 'abs';     // 'abs' | 'pm'
-let active = new Set(COUNTRY_CFG.filter(c => c.on).map(c => c.name));
-let tlChart = null;
+let DATA    = null;
+let metric  = 'cases';
+let scale   = 'abs';
+let active  = new Set(COUNTRY_CFG.filter(c => c.on).map(c => c.name));
+let charts  = {};
 
 const fmt = n => {
   if (!n) return '0';
@@ -369,9 +455,9 @@ const fmt = n => {
   return n.toLocaleString();
 };
 
-Chart.defaults.color = '#7a9ac0';
-Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-Chart.defaults.font.size = 11;
+function label(name) {
+  return name === 'United States' ? 'USA' : name === 'United Kingdom' ? 'UK' : name;
+}
 
 /* ═══════════════════════════════════════════════════
    BOOT
@@ -380,7 +466,15 @@ async function boot() {
   const res = await fetch('covid-data.json');
   DATA = await res.json();
 
-  fillKPIs();
+  const wrl = DATA['World'], rus = DATA['Russia'], eur = DATA['Europe'];
+  document.getElementById('kGC').textContent = fmt(wrl.tc);
+  document.getElementById('kGD').textContent = fmt(wrl.td);
+  document.getElementById('kRD').textContent = fmt(rus.td);
+  document.getElementById('kRShare').textContent =
+    ((rus.td / eur.td) * 100).toFixed(0) + '% of Europe\'s toll';
+  const maxVp = Math.max(...rus.data.map(d => d.vp));
+  document.getElementById('kRV').textContent = maxVp.toFixed(0) + '%';
+
   buildChips();
   buildTimeline();
   buildRegional();
@@ -388,34 +482,16 @@ async function boot() {
   buildVacc();
 }
 
-/* ─── KPI cards ─── */
-function fillKPIs() {
-  const wrl = DATA['World'],  rus = DATA['Russia'], eur = DATA['Europe'];
-
-  document.getElementById('kGC').textContent = fmt(wrl.tc);
-  document.getElementById('kGD').textContent = fmt(wrl.td);
-  document.getElementById('kRD').textContent = fmt(rus.td);
-  document.getElementById('kRShare').textContent =
-    ((rus.td / eur.td) * 100).toFixed(0) + '% of Europe\'s toll';
-
-  const maxVp = Math.max(...rus.data.map(d => d.vp));
-  document.getElementById('kRV').textContent = maxVp.toFixed(0) + '%';
-  document.getElementById('kRVNote').textContent = 'peak · EU avg ~80%';
-}
-
-/* ─── Chip toggles ─── */
+/* ─── Chips ─── */
 function buildChips() {
   const wrap = document.getElementById('chips');
   COUNTRY_CFG.forEach(cfg => {
-    const label = cfg.name === 'United States' ? 'USA'
-                : cfg.name === 'United Kingdom' ? 'UK'
-                : cfg.name;
     const div = document.createElement('div');
     div.className = 'chip' + (cfg.on ? ' on' : '');
     div.style.setProperty('--chip-color', cfg.color);
-    div.style.setProperty('--chip-rgb', cfg.rgb);
+    div.style.setProperty('--chip-rgb',   cfg.rgb);
     div.dataset.name = cfg.name;
-    div.innerHTML = `<div class="dot" style="background:${cfg.color}"></div>${label}`;
+    div.innerHTML = `<div class="dot" style="background:${cfg.color}"></div>${label(cfg.name)}`;
     div.addEventListener('click', () => {
       const n = div.dataset.name;
       if (active.has(n)) { active.delete(n); div.classList.remove('on'); }
@@ -427,20 +503,35 @@ function buildChips() {
 }
 
 /* ═══════════════════════════════════════════════════
-   TIMELINE CHART
+   SHARED CHART OPTIONS
    ═══════════════════════════════════════════════════ */
-function getVal(d, pop) {
-  const raw = metric === 'cases' ? d.nc : d.nd;
-  if (scale === 'pm' && pop > 0) return raw / (pop / 1e6);
-  return raw;
+function axisStyle(tc) {
+  return {
+    ticks:  { color: tc.tick },
+    grid:   { color: tc.grid },
+    border: { color: tc.border },
+  };
 }
 
-function makeDatasets() {
-  // Common date labels from World
-  const labels = DATA['World'].data.map(d => d.d);
-  const dateIdx = new Map(labels.map((d, i) => [d, i]));
+function tooltipStyle(tc) {
+  return {
+    backgroundColor: tc.tooltipBg,
+    borderColor:     tc.tooltipBorder,
+    borderWidth:     1,
+    titleColor:      tc.tooltipTitle,
+    bodyColor:       tc.tooltipBody,
+    padding:         10,
+  };
+}
 
+/* ═══════════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════════ */
+function makeDatasets() {
+  const labels   = DATA['World'].data.map(d => d.d);
+  const dateIdx  = new Map(labels.map((d, i) => [d, i]));
   const datasets = [];
+
   COUNTRY_CFG.forEach(cfg => {
     if (!active.has(cfg.name)) return;
     const entry = DATA[cfg.name];
@@ -449,19 +540,21 @@ function makeDatasets() {
     const vals = new Array(labels.length).fill(null);
     entry.data.forEach(d => {
       const i = dateIdx.get(d.d);
-      if (i !== undefined) vals[i] = getVal(d, entry.pop);
+      if (i === undefined) return;
+      const raw = metric === 'cases' ? d.nc : d.nd;
+      vals[i] = scale === 'pm' && entry.pop > 0 ? raw / (entry.pop / 1e6) : raw;
     });
 
     datasets.push({
-      label: cfg.name === 'United States' ? 'USA' : cfg.name === 'United Kingdom' ? 'UK' : cfg.name,
-      data: vals,
-      borderColor: cfg.color,
+      label:           label(cfg.name),
+      data:            vals,
+      borderColor:     cfg.color,
       backgroundColor: cfg.color + '18',
-      borderWidth: cfg.name === 'Russia' ? 2.5 : 1.5,
-      pointRadius: 0,
-      tension: 0.35,
-      fill: false,
-      spanGaps: true,
+      borderWidth:     cfg.name === 'Russia' ? 2.5 : 1.5,
+      pointRadius:     0,
+      tension:         0.35,
+      fill:            false,
+      spanGaps:        true,
     });
   });
 
@@ -469,10 +562,13 @@ function makeDatasets() {
 }
 
 function buildTimeline() {
+  const tc = themeColors();
   const { labels, datasets } = makeDatasets();
   const ctx = document.getElementById('cTimeline').getContext('2d');
 
-  tlChart = new Chart(ctx, {
+  if (charts.timeline) charts.timeline.destroy();
+
+  charts.timeline = new Chart(ctx, {
     type: 'line',
     data: { labels, datasets },
     options: {
@@ -481,8 +577,7 @@ function buildTimeline() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
-          titleColor: '#7a9ac0', bodyColor: '#e8f0fe', padding: 10,
+          ...tooltipStyle(tc),
           callbacks: {
             title: items => {
               const d = new Date(items[0].label);
@@ -491,33 +586,32 @@ function buildTimeline() {
             label: ctx => {
               const v = ctx.parsed.y;
               if (v === null) return null;
-              const sfx = scale === 'pm' ? '/M pop' : '';
-              return `  ${ctx.dataset.label}: ${scale === 'pm' ? v.toFixed(1) : fmt(Math.round(v))}${sfx}`;
+              return `  ${ctx.dataset.label}: ${scale === 'pm' ? v.toFixed(1) + '/M' : fmt(Math.round(v))}`;
             }
           }
         }
       },
       scales: {
         x: {
+          ...axisStyle(tc),
           ticks: {
-            maxTicksLimit: 14, maxRotation: 0, color: '#7a9ac0',
+            ...axisStyle(tc).ticks,
+            maxTicksLimit: 14, maxRotation: 0,
             callback: function(val) {
-              const lbl = this.getLabelForValue(val);
-              const d = new Date(lbl);
+              const d = new Date(this.getLabelForValue(val));
               const m = d.getMonth();
               if (m === 0 || m === 6)
                 return d.toLocaleDateString('en', { month: 'short', year: '2-digit' });
               return '';
             }
-          },
-          grid: { color: '#1e2d4588' }, border: { color: '#1e2d45' }
+          }
         },
         y: {
+          ...axisStyle(tc),
           ticks: {
-            color: '#7a9ac0',
+            ...axisStyle(tc).ticks,
             callback: v => scale === 'pm' ? v.toFixed(0) : fmt(v)
-          },
-          grid: { color: '#1e2d4588' }, border: { color: '#1e2d45' }
+          }
         }
       }
     }
@@ -526,9 +620,9 @@ function buildTimeline() {
 
 function rebuildTimeline() {
   const { labels, datasets } = makeDatasets();
-  tlChart.data.labels   = labels;
-  tlChart.data.datasets = datasets;
-  tlChart.update();
+  charts.timeline.data.labels   = labels;
+  charts.timeline.data.datasets = datasets;
+  charts.timeline.update();
 }
 
 function setMetric(m) {
@@ -546,9 +640,10 @@ function setScale(s) {
 }
 
 /* ═══════════════════════════════════════════════════
-   REGIONAL BAR CHART
+   REGIONAL
    ═══════════════════════════════════════════════════ */
 function buildRegional() {
+  const tc = themeColors();
   const regions = [
     { n: 'Africa',        c: '#ab47bc' },
     { n: 'Asia',          c: '#ffd32a' },
@@ -557,27 +652,24 @@ function buildRegional() {
     { n: 'South America', c: '#1dd1a1' },
     { n: 'Oceania',       c: '#4dd0e1' },
   ];
-
-  const labels = regions.map(r => r.n.replace(' ', '\n'));
-  const caseM  = regions.map(r => (DATA[r.n]?.tc || 0) / 1e6);
-  const deathK = regions.map(r => (DATA[r.n]?.td || 0) / 1e3);
-
   const ctx = document.getElementById('cRegional').getContext('2d');
-  new Chart(ctx, {
+  if (charts.regional) charts.regional.destroy();
+
+  charts.regional = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels,
+      labels: regions.map(r => r.n.replace(' ', '\n')),
       datasets: [
         {
           label: 'Cases (M)',
-          data: caseM,
+          data: regions.map(r => (DATA[r.n]?.tc || 0) / 1e6),
           backgroundColor: regions.map(r => r.c + 'aa'),
-          borderColor:      regions.map(r => r.c),
+          borderColor:     regions.map(r => r.c),
           borderWidth: 1, yAxisID: 'yC'
         },
         {
           label: 'Deaths (K)',
-          data: deathK,
+          data: regions.map(r => (DATA[r.n]?.td || 0) / 1e3),
           backgroundColor: '#ff404055',
           borderColor:     '#ff4040',
           borderWidth: 1, yAxisID: 'yD'
@@ -587,55 +679,44 @@ function buildRegional() {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#7a9ac0', boxWidth: 12 } },
-        tooltip: {
-          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
-          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
-        }
+        legend: { labels: { color: tc.tick, boxWidth: 12 } },
+        tooltip: tooltipStyle(tc),
       },
       scales: {
-        x: { ticks: { color: '#7a9ac0' }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } },
-        yC: {
-          type: 'linear', position: 'left',
-          ticks: { color: '#4dd0e1', callback: v => v + 'M' },
-          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
-        },
-        yD: {
-          type: 'linear', position: 'right',
-          ticks: { color: '#ff7070', callback: v => v + 'K' },
-          grid: { drawOnChartArea: false }, border: { color: '#1e2d45' }
-        }
+        x:  { ...axisStyle(tc), ticks: { color: tc.tick } },
+        yC: { ...axisStyle(tc), type: 'linear', position: 'left',
+              ticks: { color: isDark ? '#4dd0e1' : '#0090a8', callback: v => v + 'M' } },
+        yD: { type: 'linear', position: 'right',
+              ticks: { color: '#ff7070', callback: v => v + 'K' },
+              grid: { drawOnChartArea: false }, border: { color: tc.border } }
       }
     }
   });
 }
 
 /* ═══════════════════════════════════════════════════
-   EUROPE DEATHS PER MILLION
+   EUROPE DEATHS / MILLION
    ═══════════════════════════════════════════════════ */
 function buildEurope() {
-  const countries = [
-    'Russia','Ukraine','Italy','United Kingdom',
-    'France','Spain','Germany','Poland','Greece'
-  ];
+  const tc = themeColors();
+  const countries = ['Russia','Ukraine','Italy','United Kingdom','France','Spain','Germany','Poland','Greece'];
   const pts = countries
-    .map(c => {
-      const d = DATA[c];
-      if (!d || !d.pop) return null;
-      return { c, v: Math.round(d.td / (d.pop / 1e6)) };
-    })
+    .map(c => { const d = DATA[c]; if (!d||!d.pop) return null;
+                return { c, v: Math.round(d.td / (d.pop / 1e6)) }; })
     .filter(Boolean)
     .sort((a, b) => b.v - a.v);
 
   const ctx = document.getElementById('cEurope').getContext('2d');
-  new Chart(ctx, {
+  if (charts.europe) charts.europe.destroy();
+
+  charts.europe = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: pts.map(p => p.c === 'United Kingdom' ? 'UK' : p.c),
       datasets: [{
-        data: pts.map(p => p.v),
-        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : '#4dd0e133'),
-        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : '#4dd0e1'),
+        data:            pts.map(p => p.v),
+        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : (isDark ? '#4dd0e133' : '#0090a822')),
+        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : (isDark ? '#4dd0e1'   : '#0090a8')),
         borderWidth: 1.5,
       }]
     },
@@ -643,49 +724,44 @@ function buildEurope() {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
-          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
+        tooltip: { ...tooltipStyle(tc),
           callbacks: { label: c => `  ${c.parsed.x.toLocaleString()} deaths / million` }
         }
       },
       scales: {
-        x: { ticks: { color: '#7a9ac0' }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } },
-        y: { ticks: { color: '#e8f0fe', font: { size: 11 } }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } }
+        x: axisStyle(tc),
+        y: { ...axisStyle(tc), ticks: { color: tc.labelColor, font: { size: 11 } } }
       }
     }
   });
 }
 
 /* ═══════════════════════════════════════════════════
-   VACCINATION CHART
+   VACCINATION
    ═══════════════════════════════════════════════════ */
 function buildVacc() {
+  const tc = themeColors();
   const countries = [
     'United Kingdom','France','Germany','Italy','Spain','Canada','Australia',
     'United States','Brazil','Poland','Ukraine','Turkey','Russia','India','South Africa'
   ];
   const pts = countries
-    .map(c => {
-      const d = DATA[c];
-      if (!d) return null;
-      const peak = Math.max(...d.data.map(x => x.vp));
-      return { c, v: peak };
-    })
+    .map(c => { const d = DATA[c]; if (!d) return null;
+                return { c, v: Math.max(...d.data.map(x => x.vp)) }; })
     .filter(p => p && p.v > 0)
     .sort((a, b) => b.v - a.v);
 
   const ctx = document.getElementById('cVacc').getContext('2d');
-  new Chart(ctx, {
+  if (charts.vacc) charts.vacc.destroy();
+
+  charts.vacc = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: pts.map(p =>
-        p.c === 'United Kingdom' ? 'UK' :
-        p.c === 'United States'  ? 'USA' : p.c),
+      labels: pts.map(p => p.c === 'United Kingdom' ? 'UK' : p.c === 'United States' ? 'USA' : p.c),
       datasets: [{
-        data: pts.map(p => p.v),
-        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : '#2ed57333'),
-        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : '#2ed573'),
+        data:            pts.map(p => p.v),
+        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : (isDark ? '#2ed57333' : '#22aa5522')),
+        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : (isDark ? '#2ed573'   : '#22aa55')),
         borderWidth: 1.5,
       }]
     },
@@ -693,26 +769,31 @@ function buildVacc() {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
-          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
+        tooltip: { ...tooltipStyle(tc),
           callbacks: { label: c => `  ${c.parsed.x.toFixed(1)}% vaccinated (≥1 dose)` }
         }
       },
       scales: {
-        x: {
-          min: 0, max: 100,
-          ticks: { color: '#7a9ac0', callback: v => v + '%' },
-          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
-        },
-        y: {
-          ticks: { color: '#e8f0fe', font: { size: 11 } },
-          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
-        }
+        x: { ...axisStyle(tc), min: 0, max: 100,
+             ticks: { color: tc.tick, callback: v => v + '%' } },
+        y: { ...axisStyle(tc), ticks: { color: tc.labelColor, font: { size: 11 } } }
       }
     }
   });
 }
+
+/* ═══════════════════════════════════════════════════
+   REBUILD ALL ON THEME SWITCH
+   ═══════════════════════════════════════════════════ */
+function rebuildAllCharts() {
+  buildTimeline();
+  buildRegional();
+  buildEurope();
+  buildVacc();
+}
+
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size   = 11;
 
 boot();
 </script>
