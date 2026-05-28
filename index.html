@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COVID-19 — Global Pandemic Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #080c14;
+      --surf:    #0f1623;
+      --surf2:   #162033;
+      --border:  #1e2d45;
+      --text:    #e8f0fe;
+      --dim:     #7a9ac0;
+      --russia:  #ff4040;
+      --cyan:    #4dd0e1;
+      --purple:  #a46ef0;
+      --orange:  #ff9f43;
+      --green:   #2ed573;
+      --blue:    #3d9cf5;
+      --pink:    #f368e0;
+      --gold:    #ffd32a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #0a0e1a 0%, #15002b 55%, #0a0e1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem 2rem;
+    }
+    .hero-inner { max-width: 1160px; margin: 0 auto; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      border: 1px solid var(--russia); border-radius: 3px;
+      color: var(--russia); font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .2rem .7rem; margin-bottom: 1.1rem;
+    }
+    .badge::before { content:''; display:block; width:6px; height:6px;
+      border-radius:50%; background:var(--russia); animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      font-weight: 900; line-height: 1.15; margin-bottom: .5rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--russia); }
+
+    .hero-sub {
+      color: var(--dim); font-size: .88rem; margin-bottom: 2rem;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+    }
+    .kpi {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 9px; padding: 1.1rem 1.3rem;
+    }
+    .kpi.accent { border-color: var(--russia);
+      background: linear-gradient(135deg, var(--surf2), rgba(255,64,64,.06)); }
+    .kpi-lbl {
+      font-size: .62rem; font-weight: 700; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: .45rem;
+    }
+    .kpi-val {
+      font-size: 2rem; font-weight: 800; line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi .kpi-val { color: var(--cyan); }
+    .kpi.deaths .kpi-val { color: #ff7070; }
+    .kpi.accent .kpi-val { color: var(--russia); }
+    .kpi-note { font-size: .72rem; color: var(--dim); margin-top: .35rem; }
+
+    /* ─── MAIN ─── */
+    .main { max-width: 1160px; margin: 0 auto; padding: 1.8rem 2rem; }
+
+    /* ─── FINDING BANNER ─── */
+    .finding {
+      border-left: 3px solid var(--russia);
+      background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.03));
+      border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-bottom: 2rem;
+    }
+    .finding .tag {
+      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--russia); margin-bottom: .3rem;
+    }
+    .finding p { font-size: .95rem; font-weight: 500; line-height: 1.55; }
+    .finding strong { color: var(--russia); }
+
+    /* ─── SECTION ─── */
+    .sec { margin-bottom: 2.2rem; }
+    .sec-lbl {
+      font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--dim);
+      padding-bottom: .55rem; margin-bottom: 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--surf); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem;
+    }
+
+    .card-head {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap; margin-bottom: 1rem;
+    }
+    .card-title { font-size: .88rem; font-weight: 700; }
+    .card-sub { font-size: .72rem; color: var(--dim); margin-top: .15rem; }
+
+    /* ─── CONTROLS ─── */
+    .ctrl-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+    .btn-grp {
+      display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .btn-grp button {
+      background: transparent; color: var(--dim);
+      border: none; border-right: 1px solid var(--border);
+      padding: .3rem .7rem; font-size: .72rem; font-weight: 600;
+      cursor: pointer; transition: background .12s, color .12s;
+    }
+    .btn-grp button:last-child { border-right: none; }
+    .btn-grp button.on { background: var(--cyan); color: #000; }
+    .btn-grp button:hover:not(.on) { background: var(--surf2); color: var(--text); }
+
+    /* ─── CHIP TOGGLES ─── */
+    .chips { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .8rem; }
+    .chip {
+      display: flex; align-items: center; gap: .35rem;
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 20px; padding: .22rem .75rem;
+      font-size: .7rem; font-weight: 600; cursor: pointer;
+      color: var(--dim); transition: all .12s; user-select: none;
+    }
+    .chip .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .chip.on { border-color: var(--chip-color); color: var(--chip-color);
+      background: rgba(var(--chip-rgb), .12); }
+
+    /* ─── CANVAS WRAPPERS ─── */
+    .cv { position: relative; }
+
+    /* ─── GRID ─── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ─── INSIGHT CARDS ─── */
+    .insight-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.2rem;
+    }
+    @media (max-width: 600px) { .insight-row { grid-template-columns: 1fr; } }
+    .ic {
+      background: var(--surf); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.3rem;
+    }
+    .ic-num {
+      font-size: 2.6rem; font-weight: 900; color: var(--gold);
+      line-height: 1; margin-bottom: .5rem;
+    }
+    .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
+    .ic-text strong { color: var(--text); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center; padding: 1.5rem 1rem;
+      color: var(--dim); font-size: .7rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
+
+    <h1>Russia Led Europe in Deaths,<br>
+        <em>Not in Vaccines</em></h1>
+    <p class="hero-sub">WHO / Our World in Data · 40 countries · 4+ years · ~430 000 data points</p>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-lbl">Global Cases Reported</div>
+        <div class="kpi-val" id="kGC">—</div>
+        <div class="kpi-note">cumulative, as of Aug 2024</div>
+      </div>
+      <div class="kpi deaths">
+        <div class="kpi-lbl">Global Deaths</div>
+        <div class="kpi-val" id="kGD">—</div>
+        <div class="kpi-note">official WHO-reported</div>
+      </div>
+      <div class="kpi accent">
+        <div class="kpi-lbl">Russia Official Deaths</div>
+        <div class="kpi-val" id="kRD">—</div>
+        <div class="kpi-note" id="kRShare">— of Europe's toll</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Russia Vaccination %</div>
+        <div class="kpi-val" id="kRV">—</div>
+        <div class="kpi-note" id="kRVNote">vs EU average</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+  <!-- Main finding -->
+  <div class="finding">
+    <div class="tag">Main Finding</div>
+    <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
+      <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
+      of its population, nearly <strong>20 points below</strong> the EU average.
+      Independent demographic estimates put Russia's true excess mortality at
+      <strong>2–3× the official figure</strong>.</p>
+  </div>
+
+  <!-- ── Section 1: Timeline ── -->
+  <div class="sec">
+    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / Deaths</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Wave by Wave, 2020 – 2024</div>
+          <div class="card-sub">Select metric · toggle scale · click countries to add/remove</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-grp">
+            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
+            <button        id="bDeaths" onclick="setMetric('deaths')">Deaths</button>
+          </div>
+          <div class="btn-grp">
+            <button class="on" id="bAbs" onclick="setScale('abs')">Absolute</button>
+            <button        id="bPM"  onclick="setScale('pm')">Per Million</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chips" id="chips"></div>
+
+      <div class="cv" style="height:310px;margin-top:1.1rem">
+        <canvas id="cTimeline"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 2: Regional + Europe Deaths ── -->
+  <div class="sec">
+    <div class="sec-lbl">Geographic Perspective</div>
+    <div class="two-col">
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Cases by Region</div>
+            <div class="card-sub">Cumulative totals, millions</div>
+          </div>
+        </div>
+        <div class="cv" style="height:260px">
+          <canvas id="cRegional"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Deaths per Million — Europe</div>
+            <div class="card-sub">Official deaths · Russia highlighted in red</div>
+          </div>
+        </div>
+        <div class="cv" style="height:260px">
+          <canvas id="cEurope"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Supporting insight cards ── -->
+  <div class="insight-row">
+    <div class="ic">
+      <div class="ic-num">Jan 2022</div>
+      <div class="ic-text">
+        The <strong>Omicron wave</strong> drove global new cases to a weekly record of
+        <strong>6.3 million</strong>. Yet death rates fell sharply worldwide as vaccines
+        and prior immunity blunted severity — except in under-vaccinated populations.
+      </div>
+    </div>
+    <div class="ic">
+      <div class="ic-num">−20 pp</div>
+      <div class="ic-text">
+        Russia's vaccination rate peaked at <strong>61%</strong> vs
+        <strong>81% in France</strong> and <strong>78% in Germany</strong> — a 20-point gap.
+        Lower uptake of Sputnik V, combined with vaccine hesitancy, left millions
+        unprotected during the Delta and Omicron waves.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 3: Vaccination Race ── -->
+  <div class="sec">
+    <div class="sec-lbl">Vaccination Progress — % Population with at Least One Dose (peak)</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Who Got Vaccinated?</div>
+          <div class="card-sub">Peak single-dose coverage · Russia shown in red</div>
+        </div>
+      </div>
+      <div class="cv" style="height:310px">
+        <canvas id="cVacc"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Data: Our World in Data / WHO COVID-19 Dataset &nbsp;·&nbsp; Updated Aug 2024 &nbsp;·&nbsp;
+  40 countries &amp; regional aggregates
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CONSTANTS & STATE
+   ═══════════════════════════════════════════════════ */
+const COUNTRY_CFG = [
+  { name: 'World',          color: '#4dd0e1', rgb: '77,208,225',  on: true  },
+  { name: 'Russia',         color: '#ff4040', rgb: '255,64,64',   on: true  },
+  { name: 'Europe',         color: '#a46ef0', rgb: '164,110,240', on: true  },
+  { name: 'United States',  color: '#ff9f43', rgb: '255,159,67',  on: true  },
+  { name: 'Germany',        color: '#2ed573', rgb: '46,213,115',  on: false },
+  { name: 'France',         color: '#3d9cf5', rgb: '61,156,245',  on: false },
+  { name: 'United Kingdom', color: '#f368e0', rgb: '243,104,224', on: false },
+  { name: 'India',          color: '#ffd32a', rgb: '255,211,42',  on: false },
+  { name: 'Brazil',         color: '#1dd1a1', rgb: '29,209,161',  on: false },
+];
+
+let DATA = null;
+let metric = 'cases';   // 'cases' | 'deaths'
+let scale  = 'abs';     // 'abs' | 'pm'
+let active = new Set(COUNTRY_CFG.filter(c => c.on).map(c => c.name));
+let tlChart = null;
+
+const fmt = n => {
+  if (!n) return '0';
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(0) + 'K';
+  return n.toLocaleString();
+};
+
+Chart.defaults.color = '#7a9ac0';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+
+/* ═══════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════ */
+async function boot() {
+  const res = await fetch('covid-data.json');
+  DATA = await res.json();
+
+  fillKPIs();
+  buildChips();
+  buildTimeline();
+  buildRegional();
+  buildEurope();
+  buildVacc();
+}
+
+/* ─── KPI cards ─── */
+function fillKPIs() {
+  const wrl = DATA['World'],  rus = DATA['Russia'], eur = DATA['Europe'];
+
+  document.getElementById('kGC').textContent = fmt(wrl.tc);
+  document.getElementById('kGD').textContent = fmt(wrl.td);
+  document.getElementById('kRD').textContent = fmt(rus.td);
+  document.getElementById('kRShare').textContent =
+    ((rus.td / eur.td) * 100).toFixed(0) + '% of Europe\'s toll';
+
+  const maxVp = Math.max(...rus.data.map(d => d.vp));
+  document.getElementById('kRV').textContent = maxVp.toFixed(0) + '%';
+  document.getElementById('kRVNote').textContent = 'peak · EU avg ~80%';
+}
+
+/* ─── Chip toggles ─── */
+function buildChips() {
+  const wrap = document.getElementById('chips');
+  COUNTRY_CFG.forEach(cfg => {
+    const label = cfg.name === 'United States' ? 'USA'
+                : cfg.name === 'United Kingdom' ? 'UK'
+                : cfg.name;
+    const div = document.createElement('div');
+    div.className = 'chip' + (cfg.on ? ' on' : '');
+    div.style.setProperty('--chip-color', cfg.color);
+    div.style.setProperty('--chip-rgb', cfg.rgb);
+    div.dataset.name = cfg.name;
+    div.innerHTML = `<div class="dot" style="background:${cfg.color}"></div>${label}`;
+    div.addEventListener('click', () => {
+      const n = div.dataset.name;
+      if (active.has(n)) { active.delete(n); div.classList.remove('on'); }
+      else               { active.add(n);    div.classList.add('on');    }
+      rebuildTimeline();
+    });
+    wrap.appendChild(div);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   TIMELINE CHART
+   ═══════════════════════════════════════════════════ */
+function getVal(d, pop) {
+  const raw = metric === 'cases' ? d.nc : d.nd;
+  if (scale === 'pm' && pop > 0) return raw / (pop / 1e6);
+  return raw;
+}
+
+function makeDatasets() {
+  // Common date labels from World
+  const labels = DATA['World'].data.map(d => d.d);
+  const dateIdx = new Map(labels.map((d, i) => [d, i]));
+
+  const datasets = [];
+  COUNTRY_CFG.forEach(cfg => {
+    if (!active.has(cfg.name)) return;
+    const entry = DATA[cfg.name];
+    if (!entry) return;
+
+    const vals = new Array(labels.length).fill(null);
+    entry.data.forEach(d => {
+      const i = dateIdx.get(d.d);
+      if (i !== undefined) vals[i] = getVal(d, entry.pop);
+    });
+
+    datasets.push({
+      label: cfg.name === 'United States' ? 'USA' : cfg.name === 'United Kingdom' ? 'UK' : cfg.name,
+      data: vals,
+      borderColor: cfg.color,
+      backgroundColor: cfg.color + '18',
+      borderWidth: cfg.name === 'Russia' ? 2.5 : 1.5,
+      pointRadius: 0,
+      tension: 0.35,
+      fill: false,
+      spanGaps: true,
+    });
+  });
+
+  return { labels, datasets };
+}
+
+function buildTimeline() {
+  const { labels, datasets } = makeDatasets();
+  const ctx = document.getElementById('cTimeline').getContext('2d');
+
+  tlChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
+          titleColor: '#7a9ac0', bodyColor: '#e8f0fe', padding: 10,
+          callbacks: {
+            title: items => {
+              const d = new Date(items[0].label);
+              return d.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' });
+            },
+            label: ctx => {
+              const v = ctx.parsed.y;
+              if (v === null) return null;
+              const sfx = scale === 'pm' ? '/M pop' : '';
+              return `  ${ctx.dataset.label}: ${scale === 'pm' ? v.toFixed(1) : fmt(Math.round(v))}${sfx}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            maxTicksLimit: 14, maxRotation: 0, color: '#7a9ac0',
+            callback: function(val) {
+              const lbl = this.getLabelForValue(val);
+              const d = new Date(lbl);
+              const m = d.getMonth();
+              if (m === 0 || m === 6)
+                return d.toLocaleDateString('en', { month: 'short', year: '2-digit' });
+              return '';
+            }
+          },
+          grid: { color: '#1e2d4588' }, border: { color: '#1e2d45' }
+        },
+        y: {
+          ticks: {
+            color: '#7a9ac0',
+            callback: v => scale === 'pm' ? v.toFixed(0) : fmt(v)
+          },
+          grid: { color: '#1e2d4588' }, border: { color: '#1e2d45' }
+        }
+      }
+    }
+  });
+}
+
+function rebuildTimeline() {
+  const { labels, datasets } = makeDatasets();
+  tlChart.data.labels   = labels;
+  tlChart.data.datasets = datasets;
+  tlChart.update();
+}
+
+function setMetric(m) {
+  metric = m;
+  document.getElementById('bCases').classList.toggle('on',  m === 'cases');
+  document.getElementById('bDeaths').classList.toggle('on', m === 'deaths');
+  rebuildTimeline();
+}
+
+function setScale(s) {
+  scale = s;
+  document.getElementById('bAbs').classList.toggle('on', s === 'abs');
+  document.getElementById('bPM').classList.toggle('on',  s === 'pm');
+  rebuildTimeline();
+}
+
+/* ═══════════════════════════════════════════════════
+   REGIONAL BAR CHART
+   ═══════════════════════════════════════════════════ */
+function buildRegional() {
+  const regions = [
+    { n: 'Africa',        c: '#ab47bc' },
+    { n: 'Asia',          c: '#ffd32a' },
+    { n: 'Europe',        c: '#a46ef0' },
+    { n: 'North America', c: '#ff9f43' },
+    { n: 'South America', c: '#1dd1a1' },
+    { n: 'Oceania',       c: '#4dd0e1' },
+  ];
+
+  const labels = regions.map(r => r.n.replace(' ', '\n'));
+  const caseM  = regions.map(r => (DATA[r.n]?.tc || 0) / 1e6);
+  const deathK = regions.map(r => (DATA[r.n]?.td || 0) / 1e3);
+
+  const ctx = document.getElementById('cRegional').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Cases (M)',
+          data: caseM,
+          backgroundColor: regions.map(r => r.c + 'aa'),
+          borderColor:      regions.map(r => r.c),
+          borderWidth: 1, yAxisID: 'yC'
+        },
+        {
+          label: 'Deaths (K)',
+          data: deathK,
+          backgroundColor: '#ff404055',
+          borderColor:     '#ff4040',
+          borderWidth: 1, yAxisID: 'yD'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#7a9ac0', boxWidth: 12 } },
+        tooltip: {
+          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
+          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a9ac0' }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } },
+        yC: {
+          type: 'linear', position: 'left',
+          ticks: { color: '#4dd0e1', callback: v => v + 'M' },
+          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
+        },
+        yD: {
+          type: 'linear', position: 'right',
+          ticks: { color: '#ff7070', callback: v => v + 'K' },
+          grid: { drawOnChartArea: false }, border: { color: '#1e2d45' }
+        }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   EUROPE DEATHS PER MILLION
+   ═══════════════════════════════════════════════════ */
+function buildEurope() {
+  const countries = [
+    'Russia','Ukraine','Italy','United Kingdom',
+    'France','Spain','Germany','Poland','Greece'
+  ];
+  const pts = countries
+    .map(c => {
+      const d = DATA[c];
+      if (!d || !d.pop) return null;
+      return { c, v: Math.round(d.td / (d.pop / 1e6)) };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.v - a.v);
+
+  const ctx = document.getElementById('cEurope').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: pts.map(p => p.c === 'United Kingdom' ? 'UK' : p.c),
+      datasets: [{
+        data: pts.map(p => p.v),
+        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : '#4dd0e133'),
+        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : '#4dd0e1'),
+        borderWidth: 1.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
+          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
+          callbacks: { label: c => `  ${c.parsed.x.toLocaleString()} deaths / million` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a9ac0' }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } },
+        y: { ticks: { color: '#e8f0fe', font: { size: 11 } }, grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' } }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   VACCINATION CHART
+   ═══════════════════════════════════════════════════ */
+function buildVacc() {
+  const countries = [
+    'United Kingdom','France','Germany','Italy','Spain','Canada','Australia',
+    'United States','Brazil','Poland','Ukraine','Turkey','Russia','India','South Africa'
+  ];
+  const pts = countries
+    .map(c => {
+      const d = DATA[c];
+      if (!d) return null;
+      const peak = Math.max(...d.data.map(x => x.vp));
+      return { c, v: peak };
+    })
+    .filter(p => p && p.v > 0)
+    .sort((a, b) => b.v - a.v);
+
+  const ctx = document.getElementById('cVacc').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: pts.map(p =>
+        p.c === 'United Kingdom' ? 'UK' :
+        p.c === 'United States'  ? 'USA' : p.c),
+      datasets: [{
+        data: pts.map(p => p.v),
+        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : '#2ed57333'),
+        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : '#2ed573'),
+        borderWidth: 1.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f1623', borderColor: '#1e2d45', borderWidth: 1,
+          titleColor: '#7a9ac0', bodyColor: '#e8f0fe',
+          callbacks: { label: c => `  ${c.parsed.x.toFixed(1)}% vaccinated (≥1 dose)` }
+        }
+      },
+      scales: {
+        x: {
+          min: 0, max: 100,
+          ticks: { color: '#7a9ac0', callback: v => v + '%' },
+          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
+        },
+        y: {
+          ticks: { color: '#e8f0fe', font: { size: 11 } },
+          grid: { color: '#1e2d4555' }, border: { color: '#1e2d45' }
+        }
+      }
+    }
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
