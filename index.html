@@ -514,9 +514,10 @@ function themeColors() {
 /* ═══════════════════════════════════════════════════
    DATA & STATE
    ═══════════════════════════════════════════════════ */
-let DATA   = null;
-let metric = 'cases';
-let charts = {};
+let DATA             = null;
+let metric           = 'cases';
+let charts           = {};
+let hoveredRegionIdx = -1;
 
 const fmt = n => {
   if (!n) return '0';
@@ -668,53 +669,89 @@ function setMetric(m) {
 /* ═══════════════════════════════════════════════════
    REGIONAL
    ═══════════════════════════════════════════════════ */
+const REGIONS_CFG = [
+  { n: 'Africa',        c: '#ab47bc' },
+  { n: 'Asia',          c: '#ffd32a' },
+  { n: 'Europe',        c: '#a46ef0' },
+  { n: 'North America', c: '#ff9f43' },
+  { n: 'South America', c: '#1dd1a1' },
+  { n: 'Oceania',       c: '#4dd0e1' },
+];
+
 function buildRegional() {
-  const tc = themeColors();
-  const regions = [
-    { n: 'Africa',        c: '#ab47bc' },
-    { n: 'Asia',          c: '#ffd32a' },
-    { n: 'Europe',        c: '#a46ef0' },
-    { n: 'North America', c: '#ff9f43' },
-    { n: 'South America', c: '#1dd1a1' },
-    { n: 'Oceania',       c: '#4dd0e1' },
-  ];
+  const tc   = themeColors();
+  const BASE = isDark ? '#4dd0e1' : '#0090a8';
+  hoveredRegionIdx = -1;
+
   const ctx = document.getElementById('cRegional').getContext('2d');
   if (charts.regional) charts.regional.destroy();
 
   charts.regional = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: regions.map(r => r.n.replace(' ', '\n')),
+      labels: REGIONS_CFG.map(r => r.n),
       datasets: [
         {
           label: 'Cases (M)',
-          data: regions.map(r => (DATA[r.n]?.tc || 0) / 1e6),
-          backgroundColor: regions.map(r => r.c + 'aa'),
-          borderColor:     regions.map(r => r.c),
-          borderWidth: 1, yAxisID: 'yC'
+          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.tc || 0) / 1e6),
+          backgroundColor:      REGIONS_CFG.map(() => BASE + '44'),
+          borderColor:          REGIONS_CFG.map(() => BASE),
+          hoverBackgroundColor: REGIONS_CFG.map(r => r.c + 'cc'),
+          hoverBorderColor:     REGIONS_CFG.map(r => r.c),
+          borderWidth: 1.5,
+          yAxisID: 'yC'
         },
         {
           label: 'Deaths (K)',
-          data: regions.map(r => (DATA[r.n]?.td || 0) / 1e3),
-          backgroundColor: '#ff404055',
-          borderColor:     '#ff4040',
-          borderWidth: 1, yAxisID: 'yD'
+          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.td || 0) / 1e3),
+          backgroundColor:      '#ff404044',
+          borderColor:          '#ff4040',
+          hoverBackgroundColor: '#ff4040bb',
+          hoverBorderColor:     '#ff4040',
+          borderWidth: 1.5,
+          yAxisID: 'yD'
         }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
+      onHover: (_evt, elements) => {
+        const idx = elements.length ? elements[0].index : -1;
+        if (idx !== hoveredRegionIdx) {
+          hoveredRegionIdx = idx;
+          charts.regional.update('none');
+        }
+      },
       plugins: {
         legend: { labels: { color: tc.tick, boxWidth: 12 } },
         tooltip: tooltipStyle(tc),
       },
       scales: {
-        x:  { ...axisStyle(tc), ticks: { color: tc.tick } },
-        yC: { ...axisStyle(tc), type: 'linear', position: 'left',
-              ticks: { color: isDark ? '#4dd0e1' : '#0090a8', callback: v => v + 'M' } },
-        yD: { type: 'linear', position: 'right',
-              ticks: { color: '#ff7070', callback: v => v + 'K' },
-              grid: { drawOnChartArea: false }, border: { color: tc.border } }
+        x: {
+          grid:   { color: tc.grid },
+          border: { color: tc.border },
+          ticks: {
+            color: c => hoveredRegionIdx === c.index
+              ? (REGIONS_CFG[c.index]?.c || tc.tick)
+              : tc.tick,
+            font: c => ({
+              size:   11,
+              weight: hoveredRegionIdx === c.index ? '700' : '400',
+            }),
+          }
+        },
+        yC: {
+          type: 'linear', position: 'left',
+          grid:   { color: tc.grid },
+          border: { color: tc.border },
+          ticks:  { color: isDark ? '#4dd0e1' : '#0090a8', callback: v => v + 'M' }
+        },
+        yD: {
+          type: 'linear', position: 'right',
+          grid:   { drawOnChartArea: false },
+          border: { color: tc.border },
+          ticks:  { color: '#ff7070', callback: v => v + 'K' }
+        }
       }
     }
   });
@@ -771,18 +808,10 @@ function buildVacc() {
    DONUT CHARTS
    ═══════════════════════════════════════════════════ */
 const DONUT_YEARS = [2020, 2021, 2022, 2023];
-const REGIONS = [
-  { n: 'Africa',        c: '#ab47bc' },
-  { n: 'Asia',          c: '#ffd32a' },
-  { n: 'Europe',        c: '#a46ef0' },
-  { n: 'North America', c: '#ff9f43' },
-  { n: 'South America', c: '#1dd1a1' },
-  { n: 'Oceania',       c: '#4dd0e1' },
-];
 let donutMetric = 'cases';
 
 function getAnnualData(year, metric) {
-  return REGIONS.map(r => {
+  return REGIONS_CFG.map(r => {
     const entry = DATA[r.n];
     if (!entry) return 0;
     const pts = entry.data.filter(d => d.d.startsWith(String(year)));
@@ -809,7 +838,7 @@ function buildDonuts() {
   // Build legend once
   const legend = document.getElementById('donutLegend');
   if (!legend.children.length) {
-    REGIONS.forEach(r => {
+    REGIONS_CFG.forEach(r => {
       const el = document.createElement('div');
       el.className = 'dleg';
       el.innerHTML = `<div class="dot" style="background:${r.c}"></div>${r.n}`;
@@ -830,11 +859,11 @@ function buildDonuts() {
     charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
       type: 'doughnut',
       data: {
-        labels:   REGIONS.map(r => r.n),
+        labels:   REGIONS_CFG.map(r => r.n),
         datasets: [{
           data:            values,
-          backgroundColor: REGIONS.map(r => r.c + 'cc'),
-          borderColor:     REGIONS.map(r => r.c),
+          backgroundColor: REGIONS_CFG.map(r => r.c + 'cc'),
+          borderColor:     REGIONS_CFG.map(r => r.c),
           borderWidth:     1.5,
           hoverOffset:     8,
         }]
