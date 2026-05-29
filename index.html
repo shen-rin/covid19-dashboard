@@ -230,6 +230,57 @@
     .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
     .ic-text strong { color: var(--text); }
 
+    /* ─── DONUTS ─── */
+    .donut-section {
+      margin-top: 1.5rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
+    .donut-ctrl {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap; margin-bottom: 1.1rem;
+    }
+    .donut-ctrl-lbl {
+      font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .donut-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 700px) { .donut-row { grid-template-columns: repeat(2, 1fr); } }
+    .donut-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    }
+    .donut-canvas-wrap {
+      position: relative; width: 100%; max-width: 180px;
+    }
+    .donut-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .donut-center-year {
+      font-size: 1.3rem; font-weight: 900; line-height: 1;
+      color: var(--text);
+    }
+    .donut-center-sub {
+      font-size: .6rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--dim); margin-top: .15rem;
+    }
+    .donut-legend {
+      display: flex; flex-wrap: wrap; gap: .4rem .8rem;
+      justify-content: center; margin-top: 1rem;
+    }
+    .dleg {
+      display: flex; align-items: center; gap: .3rem;
+      font-size: .68rem; color: var(--dim);
+    }
+    .dleg .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
     /* ─── FOOTER ─── */
     footer {
       text-align: center; padding: 1.5rem 1rem;
@@ -313,6 +364,58 @@
       <div class="cv" style="height:310px;margin-top:1.1rem">
         <canvas id="cTimeline"></canvas>
       </div>
+
+      <!-- ── Donut row ── -->
+      <div class="donut-section">
+        <div class="donut-ctrl">
+          <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
+          <div class="btn-grp">
+            <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
+            <button            id="dDeaths" onclick="setDonutMetric('deaths')">Deaths</button>
+            <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+        <div class="donut-row">
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2020"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2020</div>
+                <div class="donut-center-sub" id="ds2020"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2021"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2021</div>
+                <div class="donut-center-sub" id="ds2021"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2022"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2022</div>
+                <div class="donut-center-sub" id="ds2022"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2023"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2023</div>
+                <div class="donut-center-sub" id="ds2023"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+
     </div>
   </div>
 
@@ -477,6 +580,7 @@ async function boot() {
 
   buildChips();
   buildTimeline();
+  buildDonuts();
   buildRegional();
   buildEurope();
   buildVacc();
@@ -783,6 +887,112 @@ function buildVacc() {
 }
 
 /* ═══════════════════════════════════════════════════
+   DONUT CHARTS
+   ═══════════════════════════════════════════════════ */
+const DONUT_YEARS = [2020, 2021, 2022, 2023];
+const REGIONS = [
+  { n: 'Africa',        c: '#ab47bc' },
+  { n: 'Asia',          c: '#ffd32a' },
+  { n: 'Europe',        c: '#a46ef0' },
+  { n: 'North America', c: '#ff9f43' },
+  { n: 'South America', c: '#1dd1a1' },
+  { n: 'Oceania',       c: '#4dd0e1' },
+];
+let donutMetric = 'cases';
+
+function getAnnualData(year, metric) {
+  return REGIONS.map(r => {
+    const entry = DATA[r.n];
+    if (!entry) return 0;
+    const pts = entry.data.filter(d => d.d.startsWith(String(year)));
+    if (!pts.length) return 0;
+    if (metric === 'cases')  return pts.reduce((s, d) => s + (d.nc || 0), 0);
+    if (metric === 'deaths') return pts.reduce((s, d) => s + (d.nd || 0), 0);
+    if (metric === 'vacc') {
+      const maxVp = Math.max(0, ...pts.map(d => d.vp || 0));
+      return (maxVp / 100) * ((entry.pop || 0) / 1e6); // millions vaccinated
+    }
+    return 0;
+  });
+}
+
+function donutCenterSub(year, total) {
+  if (donutMetric === 'vacc') return fmt(Math.round(total)) + 'M vacc.';
+  if (donutMetric === 'deaths') return fmt(Math.round(total * 7)) + ' deaths';
+  return fmt(Math.round(total * 7)) + ' cases';
+}
+
+function buildDonuts() {
+  const tc = themeColors();
+
+  // Build legend once
+  const legend = document.getElementById('donutLegend');
+  if (!legend.children.length) {
+    REGIONS.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'dleg';
+      el.innerHTML = `<div class="dot" style="background:${r.c}"></div>${r.n}`;
+      legend.appendChild(el);
+    });
+  }
+
+  DONUT_YEARS.forEach(year => {
+    const id  = 'd' + year;
+    const sid = 'ds' + year;
+    if (charts[id]) charts[id].destroy();
+
+    const values = getAnnualData(year, donutMetric);
+    const total  = values.reduce((s, v) => s + v, 0);
+
+    document.getElementById(sid).textContent = donutCenterSub(year, total);
+
+    charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels:   REGIONS.map(r => r.n),
+        datasets: [{
+          data:            values,
+          backgroundColor: REGIONS.map(r => r.c + 'cc'),
+          borderColor:     REGIONS.map(r => r.c),
+          borderWidth:     1.5,
+          hoverOffset:     8,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            ...tooltipStyle(tc),
+            callbacks: {
+              label: ctx => {
+                const v   = ctx.parsed;
+                const pct = total > 0 ? ((v / total) * 100).toFixed(1) : '0';
+                let disp;
+                if (donutMetric === 'vacc')   disp = fmt(Math.round(v)) + 'M vaccinated';
+                else if (donutMetric === 'deaths') disp = fmt(Math.round(v * 7));
+                else                               disp = fmt(Math.round(v * 7));
+                return `  ${ctx.label}: ${disp} (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+}
+
+function setDonutMetric(m) {
+  donutMetric = m;
+  document.getElementById('dCases').classList.toggle('on',  m === 'cases');
+  document.getElementById('dDeaths').classList.toggle('on', m === 'deaths');
+  document.getElementById('dVacc').classList.toggle('on',   m === 'vacc');
+  buildDonuts();
+}
+
+/* ═══════════════════════════════════════════════════
    REBUILD ALL ON THEME SWITCH
    ═══════════════════════════════════════════════════ */
 function rebuildAllCharts() {
@@ -790,6 +1000,7 @@ function rebuildAllCharts() {
   buildRegional();
   buildEurope();
   buildVacc();
+  buildDonuts();
 }
 
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
