@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -296,7 +296,7 @@
   <div class="hero-inner">
     <div class="hero-top">
       <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
-      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Light Mode</button>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark Mode</button>
     </div>
 
     <h1>Russia Led Europe in Deaths,<br>
@@ -478,12 +478,20 @@
 /* ═══════════════════════════════════════════════════
    THEME
    ═══════════════════════════════════════════════════ */
-let isDark = true;
+const saved = localStorage.getItem('theme');
+let isDark = saved ? saved === 'dark' : false;
+applyTheme();
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+}
 
 function toggleTheme() {
   isDark = !isDark;
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  applyTheme();
   if (DATA) rebuildAllCharts();
 }
 
