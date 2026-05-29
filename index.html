@@ -346,22 +346,17 @@
     <div class="card">
       <div class="card-head">
         <div>
-          <div class="card-title">Wave by Wave, 2020 – 2024</div>
-          <div class="card-sub">Select metric · toggle scale · click countries to add/remove</div>
+          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
+          <div class="card-sub">Worldwide total · 7-day smoothed</div>
         </div>
         <div class="ctrl-row">
           <div class="btn-grp">
             <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
             <button        id="bDeaths" onclick="setMetric('deaths')">Deaths</button>
           </div>
-          <div class="btn-grp">
-            <button class="on" id="bAbs" onclick="setScale('abs')">Absolute</button>
-            <button        id="bPM"  onclick="setScale('pm')">Per Million</button>
-          </div>
         </div>
       </div>
-      <div class="chips" id="chips"></div>
-      <div class="cv" style="height:310px;margin-top:1.1rem">
+      <div class="cv" style="height:190px;margin-top:.8rem">
         <canvas id="cTimeline"></canvas>
       </div>
 
@@ -532,23 +527,9 @@ function themeColors() {
 /* ═══════════════════════════════════════════════════
    DATA & STATE
    ═══════════════════════════════════════════════════ */
-const COUNTRY_CFG = [
-  { name: 'World',          color: '#4dd0e1', rgb: '77,208,225',  on: true  },
-  { name: 'Russia',         color: '#ff4040', rgb: '255,64,64',   on: true  },
-  { name: 'Europe',         color: '#a46ef0', rgb: '164,110,240', on: true  },
-  { name: 'United States',  color: '#ff9f43', rgb: '255,159,67',  on: true  },
-  { name: 'Germany',        color: '#2ed573', rgb: '46,213,115',  on: false },
-  { name: 'France',         color: '#3d9cf5', rgb: '61,156,245',  on: false },
-  { name: 'United Kingdom', color: '#f368e0', rgb: '243,104,224', on: false },
-  { name: 'India',          color: '#ffd32a', rgb: '255,211,42',  on: false },
-  { name: 'Brazil',         color: '#1dd1a1', rgb: '29,209,161',  on: false },
-];
-
-let DATA    = null;
-let metric  = 'cases';
-let scale   = 'abs';
-let active  = new Set(COUNTRY_CFG.filter(c => c.on).map(c => c.name));
-let charts  = {};
+let DATA   = null;
+let metric = 'cases';
+let charts = {};
 
 const fmt = n => {
   if (!n) return '0';
@@ -558,9 +539,6 @@ const fmt = n => {
   return n.toLocaleString();
 };
 
-function label(name) {
-  return name === 'United States' ? 'USA' : name === 'United Kingdom' ? 'UK' : name;
-}
 
 /* ═══════════════════════════════════════════════════
    BOOT
@@ -578,7 +556,6 @@ async function boot() {
   const maxVp = Math.max(...rus.data.map(d => d.vp));
   document.getElementById('kRV').textContent = maxVp.toFixed(0) + '%';
 
-  buildChips();
   buildTimeline();
   buildDonuts();
   buildRegional();
@@ -586,25 +563,6 @@ async function boot() {
   buildVacc();
 }
 
-/* ─── Chips ─── */
-function buildChips() {
-  const wrap = document.getElementById('chips');
-  COUNTRY_CFG.forEach(cfg => {
-    const div = document.createElement('div');
-    div.className = 'chip' + (cfg.on ? ' on' : '');
-    div.style.setProperty('--chip-color', cfg.color);
-    div.style.setProperty('--chip-rgb',   cfg.rgb);
-    div.dataset.name = cfg.name;
-    div.innerHTML = `<div class="dot" style="background:${cfg.color}"></div>${label(cfg.name)}`;
-    div.addEventListener('click', () => {
-      const n = div.dataset.name;
-      if (active.has(n)) { active.delete(n); div.classList.remove('on'); }
-      else               { active.add(n);    div.classList.add('on');    }
-      rebuildTimeline();
-    });
-    wrap.appendChild(div);
-  });
-}
 
 /* ═══════════════════════════════════════════════════
    SHARED CHART OPTIONS
@@ -632,36 +590,21 @@ function tooltipStyle(tc) {
    TIMELINE
    ═══════════════════════════════════════════════════ */
 function makeDatasets() {
-  const labels   = DATA['World'].data.map(d => d.d);
-  const dateIdx  = new Map(labels.map((d, i) => [d, i]));
-  const datasets = [];
-
-  COUNTRY_CFG.forEach(cfg => {
-    if (!active.has(cfg.name)) return;
-    const entry = DATA[cfg.name];
-    if (!entry) return;
-
-    const vals = new Array(labels.length).fill(null);
-    entry.data.forEach(d => {
-      const i = dateIdx.get(d.d);
-      if (i === undefined) return;
-      const raw = metric === 'cases' ? d.nc : d.nd;
-      vals[i] = scale === 'pm' && entry.pop > 0 ? raw / (entry.pop / 1e6) : raw;
-    });
-
-    datasets.push({
-      label:           label(cfg.name),
-      data:            vals,
-      borderColor:     cfg.color,
-      backgroundColor: cfg.color + '18',
-      borderWidth:     cfg.name === 'Russia' ? 2.5 : 1.5,
-      pointRadius:     0,
-      tension:         0.35,
-      fill:            false,
-      spanGaps:        true,
-    });
-  });
-
+  const entry  = DATA['World'];
+  const labels = entry.data.map(d => d.d);
+  const vals   = entry.data.map(d => metric === 'cases' ? d.nc : d.nd);
+  const color  = '#4dd0e1';
+  const datasets = [{
+    label:           'World',
+    data:            vals,
+    borderColor:     color,
+    backgroundColor: color + '22',
+    borderWidth:     2,
+    pointRadius:     0,
+    tension:         0.35,
+    fill:            true,
+    spanGaps:        true,
+  }];
   return { labels, datasets };
 }
 
@@ -690,7 +633,7 @@ function buildTimeline() {
             label: ctx => {
               const v = ctx.parsed.y;
               if (v === null) return null;
-              return `  ${ctx.dataset.label}: ${scale === 'pm' ? v.toFixed(1) + '/M' : fmt(Math.round(v))}`;
+              return `  ${ctx.dataset.label}: ${fmt(Math.round(v))}`;
             }
           }
         }
@@ -714,7 +657,7 @@ function buildTimeline() {
           ...axisStyle(tc),
           ticks: {
             ...axisStyle(tc).ticks,
-            callback: v => scale === 'pm' ? v.toFixed(0) : fmt(v)
+            callback: v => fmt(v)
           }
         }
       }
@@ -733,13 +676,6 @@ function setMetric(m) {
   metric = m;
   document.getElementById('bCases').classList.toggle('on',  m === 'cases');
   document.getElementById('bDeaths').classList.toggle('on', m === 'deaths');
-  rebuildTimeline();
-}
-
-function setScale(s) {
-  scale = s;
-  document.getElementById('bAbs').classList.toggle('on', s === 'abs');
-  document.getElementById('bPM').classList.toggle('on',  s === 'pm');
   rebuildTimeline();
 }
 
