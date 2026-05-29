@@ -383,6 +383,7 @@
           <div class="btn-grp">
             <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
             <button        id="bDeaths" onclick="setMetric('deaths')">Deaths</button>
+            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
           </div>
         </div>
       </div>
@@ -639,10 +640,13 @@ function tooltipStyle(tc) {
 function makeDatasets() {
   const entry  = DATA['World'];
   const labels = entry.data.map(d => d.d);
-  const vals   = entry.data.map(d => metric === 'cases' ? d.nc : d.nd);
-  const color  = '#4dd0e1';
+  const isVacc = metric === 'vacc';
+  const vals   = entry.data.map(d =>
+    metric === 'cases' ? d.nc : metric === 'deaths' ? d.nd : d.vp
+  );
+  const color = isVacc ? '#2ed573' : '#4dd0e1';
   const datasets = [{
-    label:           'World',
+    label:           isVacc ? 'Vaccinated (%)' : 'World',
     data:            vals,
     borderColor:     color,
     backgroundColor: color + '22',
@@ -680,7 +684,8 @@ function buildTimeline() {
             label: ctx => {
               const v = ctx.parsed.y;
               if (v === null) return null;
-              return `  ${ctx.dataset.label}: ${fmt(Math.round(v))}`;
+              const val = metric === 'vacc' ? v.toFixed(1) + '%' : fmt(Math.round(v));
+              return `  ${ctx.dataset.label}: ${val}`;
             }
           }
         }
@@ -704,7 +709,7 @@ function buildTimeline() {
           ...axisStyle(tc),
           ticks: {
             ...axisStyle(tc).ticks,
-            callback: v => fmt(v)
+            callback: v => metric === 'vacc' ? v.toFixed(0) + '%' : fmt(v)
           }
         }
       }
@@ -723,6 +728,7 @@ function setMetric(m) {
   metric = m;
   document.getElementById('bCases').classList.toggle('on',  m === 'cases');
   document.getElementById('bDeaths').classList.toggle('on', m === 'deaths');
+  document.getElementById('bVacc').classList.toggle('on',   m === 'vacc');
   rebuildTimeline();
 }
 
