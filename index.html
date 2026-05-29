@@ -688,24 +688,20 @@ function buildTimeline() {
       },
       scales: {
         x: {
-          grid:   { color: tc.grid },
+          grid:   { display: false },
           border: { color: tc.border },
-          afterBuildTicks: function(axis) {
-            const labels = axis.chart.data.labels;
-            axis.ticks = axis.ticks.filter(t => {
-              const lbl = labels[t.value];
-              if (!lbl) return false;
-              const m = new Date(lbl).getMonth();
-              return m === 0 || m === 6;
-            });
-          },
           ticks: {
+            autoSkip:    false,
             maxRotation: 0,
             color: tc.tick,
             callback: function(val) {
-              const d   = new Date(this.getLabelForValue(val));
-              const yr  = String(d.getFullYear()).slice(2);
-              return d.getMonth() === 0 ? `Jan '${yr}` : `Jul '${yr}`;
+              const lbl = this.getLabelForValue(val);
+              if (!lbl) return null;
+              const d = new Date(lbl);
+              const m = d.getMonth();
+              if (m !== 0 && m !== 6) return null;
+              const yr = String(d.getFullYear()).slice(2);
+              return m === 0 ? `Jan '${yr}` : `Jul '${yr}`;
             }
           }
         },
