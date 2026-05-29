@@ -281,6 +281,36 @@
     }
     .dleg .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
+    /* ─── SOURCES ─── */
+    .sources {
+      max-width: 1160px; margin: 0 auto;
+      padding: 1.5rem 2rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .sources-lbl {
+      font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: .8rem;
+    }
+    .sources-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: .45rem;
+    }
+    .sources-list li {
+      font-size: .78rem; color: var(--dim);
+      display: flex; align-items: baseline; gap: .5rem;
+    }
+    .sources-list li::before {
+      content: '—'; flex-shrink: 0; color: var(--border);
+    }
+    .sources-list a {
+      color: var(--dim); text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .sources-list a:hover {
+      color: var(--text); border-bottom-color: var(--text);
+    }
+
     /* ─── FOOTER ─── */
     footer {
       text-align: center; padding: 1.5rem 1rem;
@@ -469,8 +499,30 @@
 
 </div>
 
+<div class="sources">
+  <div class="sources-lbl">Data Sources</div>
+  <ul class="sources-list">
+    <li>
+      <span><strong>Our World in Data</strong> — COVID-19 Dataset (primary source, ~430 000 rows, updated Aug 2024)</span>
+      &nbsp;<a href="https://ourworldindata.org/coronavirus" target="_blank" rel="noopener">ourworldindata.org/coronavirus</a>
+    </li>
+    <li>
+      <span><strong>World Health Organization (WHO)</strong> — COVID-19 Dashboard &amp; Global Data</span>
+      &nbsp;<a href="https://covid19.who.int/" target="_blank" rel="noopener">covid19.who.int</a>
+    </li>
+    <li>
+      <span><strong>OWID GitHub Repository</strong> — Raw CSV data file used in this project</span>
+      &nbsp;<a href="https://github.com/owid/covid-19-data" target="_blank" rel="noopener">github.com/owid/covid-19-data</a>
+    </li>
+    <li>
+      <span><strong>Rosstat / Russian Federal State Statistics Service</strong> — Russia excess mortality estimates</span>
+      &nbsp;<a href="https://rosstat.gov.ru/" target="_blank" rel="noopener">rosstat.gov.ru</a>
+    </li>
+  </ul>
+</div>
+
 <footer>
-  Data: Our World in Data / WHO COVID-19 Dataset &nbsp;·&nbsp; Updated Aug 2024 &nbsp;·&nbsp;
+  COVID-19 Global Pandemic Dashboard &nbsp;·&nbsp; Data as of Aug 2024 &nbsp;·&nbsp;
   40 countries &amp; regional aggregates
 </footer>
 
@@ -880,6 +932,7 @@ function buildDonuts() {
         responsive: true,
         maintainAspectRatio: true,
         cutout: '68%',
+        layout: { padding: 10 },
         plugins: {
           legend: { display: false },
           tooltip: {
