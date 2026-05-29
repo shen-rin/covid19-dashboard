@@ -688,16 +688,24 @@ function buildTimeline() {
       },
       scales: {
         x: {
-          ...axisStyle(tc),
+          grid:   { color: tc.grid },
+          border: { color: tc.border },
+          afterBuildTicks: function(axis) {
+            const labels = axis.chart.data.labels;
+            axis.ticks = axis.ticks.filter(t => {
+              const lbl = labels[t.value];
+              if (!lbl) return false;
+              const m = new Date(lbl).getMonth();
+              return m === 0 || m === 6;
+            });
+          },
           ticks: {
-            ...axisStyle(tc).ticks,
-            maxTicksLimit: 14, maxRotation: 0,
+            maxRotation: 0,
+            color: tc.tick,
             callback: function(val) {
-              const d = new Date(this.getLabelForValue(val));
-              const m = d.getMonth();
-              if (m === 0 || m === 6)
-                return d.toLocaleDateString('en', { month: 'short', year: '2-digit' });
-              return '';
+              const d   = new Date(this.getLabelForValue(val));
+              const yr  = String(d.getFullYear()).slice(2);
+              return d.getMonth() === 0 ? `Jan '${yr}` : `Jul '${yr}`;
             }
           }
         },
