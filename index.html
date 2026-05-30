@@ -367,8 +367,8 @@
     }
     .vacc-chart-area {
       flex: 0 0 460px;
-      height: 400px;
-      margin-top: 80px;
+      height: 520px;
+      margin-top: 90px;
     }
     /* SVG element classes */
     .syr-metal { fill: var(--syr-metal); }
@@ -1190,8 +1190,16 @@ function buildVacc() {
       labels: pts.map(p => p.c === 'United Kingdom' ? 'UK' : p.c === 'United States' ? 'USA' : p.c),
       datasets: [{
         data:            pts.map(p => p.v),
-        backgroundColor: pts.map(p => p.c === 'Russia' ? '#ff404066' : (isDark ? '#2ed57333' : '#22aa5522')),
-        borderColor:     pts.map(p => p.c === 'Russia' ? '#ff4040'   : (isDark ? '#2ed573'   : '#22aa55')),
+        backgroundColor: pts.map(p => {
+          if (p.c === 'Russia') return '#ff404055';
+          const t = Math.min(1, p.v / 100);
+          return `hsla(${Math.round(30 + t * 160)}, 65%, 55%, 0.38)`;
+        }),
+        borderColor: pts.map(p => {
+          if (p.c === 'Russia') return '#ff4040';
+          const t = Math.min(1, p.v / 100);
+          return `hsl(${Math.round(30 + t * 160)}, 65%, 55%)`;
+        }),
         borderWidth: 1.5,
         borderRadius: { topRight: 6, bottomRight: 6, topLeft: 0, bottomLeft: 0 },
       }]
