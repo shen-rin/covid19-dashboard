@@ -630,6 +630,9 @@
                 <clipPath id="barrelClip">
                   <rect x="22" y="60" width="36" height="210" rx="4"/>
                 </clipPath>
+                <clipPath id="liquidClip">
+                  <rect id="liquidClipRect" x="22" y="270" width="36" height="0" rx="4"/>
+                </clipPath>
                 <!-- Rubber stopper gradient -->
                 <linearGradient id="stopperGrad" x1="0" y1="0" x2="1" y2="0">
                   <stop offset="0%"   stop-color="#2c3e50"/>
@@ -646,12 +649,12 @@
               <rect id="syringeFill" x="22" y="270" width="36" height="0" rx="4" clip-path="url(#barrelClip)" class="syr-liquid"/>
 
               <!-- ③ Bubbles -->
-              <circle cx="31" cy="262" r="3.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.4s;animation-delay:0.0s"/>
-              <circle cx="44" cy="255" r="2.2" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.9s;animation-delay:0.7s"/>
-              <circle cx="36" cy="268" r="2.8" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.8s;animation-delay:1.3s"/>
-              <circle cx="50" cy="260" r="1.8" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.1s;animation-delay:0.4s"/>
-              <circle cx="28" cy="250" r="2.0" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:3.0s;animation-delay:1.8s"/>
-              <circle cx="42" cy="265" r="1.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.7s;animation-delay:2.2s"/>
+              <circle cx="31" cy="262" r="3.5" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.4s;animation-delay:0.0s"/>
+              <circle cx="44" cy="255" r="2.2" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:1.9s;animation-delay:0.7s"/>
+              <circle cx="36" cy="268" r="2.8" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.8s;animation-delay:1.3s"/>
+              <circle cx="50" cy="260" r="1.8" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.1s;animation-delay:0.4s"/>
+              <circle cx="28" cy="250" r="2.0" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:3.0s;animation-delay:1.8s"/>
+              <circle cx="42" cy="265" r="1.5" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:1.7s;animation-delay:2.2s"/>
 
               <!-- ④ Graduation marks & labels (right side) -->
               <line x1="58" y1="270" x2="66" y2="270" class="syr-mark"/><text x="69" y="274" class="syr-mark-lbl" text-anchor="start">0%</text>
@@ -1195,14 +1198,16 @@ function _drawSyringe(pct) {
   const fillY  = barrelBot - fillH;                               // top of liquid
   const stopperY = Math.max(barrelTop - stopperH, fillY - stopperH); // stopper sits just above liquid
 
-  const fill     = document.getElementById('syringeFill');
-  const plunger  = document.getElementById('syringePlunger');
-  const ridge    = document.getElementById('syringeStopperRidge');
-  const rodInner = document.getElementById('syringeRodInner');
+  const fill          = document.getElementById('syringeFill');
+  const plunger       = document.getElementById('syringePlunger');
+  const ridge         = document.getElementById('syringeStopperRidge');
+  const rodInner      = document.getElementById('syringeRodInner');
+  const liquidClipRect = document.getElementById('liquidClipRect');
   if (!fill || !plunger) return;
 
   fill.setAttribute('y', fillY);
   fill.setAttribute('height', fillH);
+  if (liquidClipRect) { liquidClipRect.setAttribute('y', fillY); liquidClipRect.setAttribute('height', fillH); }
   plunger.setAttribute('y', stopperY);
   if (ridge)    ridge.setAttribute('y', stopperY + 5);
   if (rodInner) rodInner.setAttribute('height', Math.max(0, stopperY - barrelTop));
