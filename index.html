@@ -312,7 +312,7 @@
       align-items: center;
       flex-shrink: 0;
       width: 150px;
-      padding: 0.5rem 1rem 0.5rem 2rem;
+      padding: 0.5rem 2rem 0.5rem 1rem;
       user-select: none;
     }
     .syringe-country {
@@ -581,6 +581,10 @@
         </div>
       </div>
       <div class="vacc-layout">
+        <!-- Chart -->
+        <div class="cv vacc-chart-area">
+          <canvas id="cVacc"></canvas>
+        </div>
         <!-- Syringe -->
         <div class="syringe-panel">
           <div class="syringe-country" id="syringeLabel">World Avg</div>
@@ -604,20 +608,20 @@
               <!-- Liquid fill (clipped to barrel) — animated via JS -->
               <rect id="syringeFill" x="22" y="270" width="36" height="0" rx="4" clip-path="url(#barrelClip)" class="syr-liquid"/>
 
-              <!-- Graduation marks & labels -->
-              <line x1="22" y1="270" x2="14" y2="270" class="syr-mark"/><text x="11" y="274" class="syr-mark-lbl" text-anchor="end">0%</text>
-              <line x1="22" y1="228" x2="14" y2="228" class="syr-mark"/><text x="11" y="232" class="syr-mark-lbl" text-anchor="end">20%</text>
-              <line x1="22" y1="186" x2="14" y2="186" class="syr-mark"/><text x="11" y="190" class="syr-mark-lbl" text-anchor="end">40%</text>
-              <line x1="22" y1="144" x2="14" y2="144" class="syr-mark"/><text x="11" y="148" class="syr-mark-lbl" text-anchor="end">60%</text>
-              <line x1="22" y1="102" x2="14" y2="102" class="syr-mark"/><text x="11" y="106" class="syr-mark-lbl" text-anchor="end">80%</text>
-              <line x1="22" y1="60"  x2="14" y2="60"  class="syr-mark"/><text x="11" y="64"  class="syr-mark-lbl" text-anchor="end">100%</text>
+              <!-- Graduation marks & labels (right side of barrel) -->
+              <line x1="58" y1="270" x2="66" y2="270" class="syr-mark"/><text x="69" y="274" class="syr-mark-lbl" text-anchor="start">0%</text>
+              <line x1="58" y1="228" x2="66" y2="228" class="syr-mark"/><text x="69" y="232" class="syr-mark-lbl" text-anchor="start">20%</text>
+              <line x1="58" y1="186" x2="66" y2="186" class="syr-mark"/><text x="69" y="190" class="syr-mark-lbl" text-anchor="start">40%</text>
+              <line x1="58" y1="144" x2="66" y2="144" class="syr-mark"/><text x="69" y="148" class="syr-mark-lbl" text-anchor="start">60%</text>
+              <line x1="58" y1="102" x2="66" y2="102" class="syr-mark"/><text x="69" y="106" class="syr-mark-lbl" text-anchor="start">80%</text>
+              <line x1="58" y1="60"  x2="66" y2="60"  class="syr-mark"/><text x="69" y="64"  class="syr-mark-lbl" text-anchor="start">100%</text>
 
-              <!-- Minor ticks between major marks -->
-              <line x1="22" y1="249" x2="18" y2="249" class="syr-tick"/>
-              <line x1="22" y1="207" x2="18" y2="207" class="syr-tick"/>
-              <line x1="22" y1="165" x2="18" y2="165" class="syr-tick"/>
-              <line x1="22" y1="123" x2="18" y2="123" class="syr-tick"/>
-              <line x1="22" y1="81"  x2="18" y2="81"  class="syr-tick"/>
+              <!-- Minor ticks (right side) -->
+              <line x1="58" y1="249" x2="62" y2="249" class="syr-tick"/>
+              <line x1="58" y1="207" x2="62" y2="207" class="syr-tick"/>
+              <line x1="58" y1="165" x2="62" y2="165" class="syr-tick"/>
+              <line x1="58" y1="123" x2="62" y2="123" class="syr-tick"/>
+              <line x1="58" y1="81"  x2="62" y2="81"  class="syr-tick"/>
 
               <!-- Barrel-to-nozzle transition -->
               <polygon points="22,270 58,270 54,285 26,285" class="syr-metal"/>
@@ -633,10 +637,6 @@
               <rect id="syringePlunger" x="36" y="60" width="8" height="6" rx="1" class="syr-plunger"/>
             </svg>
           </div>
-        </div>
-        <!-- Chart -->
-        <div class="cv vacc-chart-area">
-          <canvas id="cVacc"></canvas>
         </div>
       </div>
       <div class="units-note">
