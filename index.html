@@ -672,12 +672,15 @@
               <rect x="36" y="303" width="8" height="6" class="syr-needle-hub"/>
               <line x1="40" y1="309" x2="40" y2="319" class="syr-needle"/>
 
-              <!-- ⑥ Plunger stopper — full barrel width, drawn above liquid -->
+              <!-- ⑥ Inner rod — barrel top down to stopper (dynamic, clipped) -->
+              <rect id="syringeRodInner" x="38" y="60" width="4" height="0" rx="1" clip-path="url(#barrelClip)" class="syr-metal"/>
+
+              <!-- ⑦ Plunger stopper — full barrel width, drawn above liquid -->
               <rect id="syringePlunger" x="22" y="47" width="36" height="13" rx="3" fill="url(#stopperGrad)"/>
               <!-- Stopper highlight ridge -->
               <rect id="syringeStopperRidge" x="24" y="52" width="32" height="3" rx="1" fill="#5a7a92" opacity="0.6"/>
 
-              <!-- ⑦ Plunger rod — thin bar from neck to barrel top -->
+              <!-- ⑧ Plunger rod — thin bar from neck to barrel top -->
               <rect x="38" y="30" width="4" height="30" rx="1" class="syr-metal"/>
 
               <!-- ⑧ Neck (wider section just below T-bar) -->
@@ -1191,15 +1194,17 @@ function _drawSyringe(pct) {
   const fillY  = barrelBot - fillH;                               // top of liquid
   const stopperY = Math.max(barrelTop - stopperH, fillY - stopperH); // stopper sits just above liquid
 
-  const fill    = document.getElementById('syringeFill');
-  const plunger = document.getElementById('syringePlunger');
-  const ridge   = document.getElementById('syringeStopperRidge');
+  const fill     = document.getElementById('syringeFill');
+  const plunger  = document.getElementById('syringePlunger');
+  const ridge    = document.getElementById('syringeStopperRidge');
+  const rodInner = document.getElementById('syringeRodInner');
   if (!fill || !plunger) return;
 
   fill.setAttribute('y', fillY);
   fill.setAttribute('height', fillH);
   plunger.setAttribute('y', stopperY);
-  if (ridge) ridge.setAttribute('y', stopperY + 5);
+  if (ridge)    ridge.setAttribute('y', stopperY + 5);
+  if (rodInner) rodInner.setAttribute('height', Math.max(0, stopperY - barrelTop));
 
   // Color: teal-blue when high, muted steel at mid, desaturated rose when low
   let color;
