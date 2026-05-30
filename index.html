@@ -377,16 +377,7 @@
     .syr-metal { fill: var(--syr-metal); }
     .syr-barrel { fill: none; stroke: var(--syr-metal); stroke-width: 1.5; }
     .syr-liquid { fill: #00bcd4; opacity: 0.58; transition: none; }
-    .syr-bubble {
-      fill: rgba(255,255,255,0.55);
-      animation: bubbleRise linear infinite;
-    }
-    @keyframes bubbleRise {
-      0%   { transform: translateY(0);     opacity: 0;   }
-      12%  { opacity: 0.65; }
-      88%  { opacity: 0.35; }
-      100% { transform: translateY(-195px); opacity: 0; }
-    }
+    .syr-bubble { fill: rgba(255,255,255,0.55); }
     .syr-mark { stroke: var(--syr-metal); stroke-width: 1.2; }
     .syr-tick { stroke: var(--syr-metal); stroke-width: 0.8; opacity: 0.6; }
     .syr-mark-lbl { fill: var(--dim); font-size: 6px; font-family: -apple-system, sans-serif;
@@ -651,13 +642,31 @@
               <!-- ② Liquid fill (clipped to barrel) -->
               <rect id="syringeFill" x="22" y="270" width="36" height="0" rx="4" clip-path="url(#barrelClip)" class="syr-liquid"/>
 
-              <!-- ③ Bubbles -->
-              <circle cx="31" cy="262" r="3.5" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.4s;animation-delay:0.0s"/>
-              <circle cx="44" cy="255" r="2.2" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:1.9s;animation-delay:0.7s"/>
-              <circle cx="36" cy="268" r="2.8" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.8s;animation-delay:1.3s"/>
-              <circle cx="50" cy="260" r="1.8" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:2.1s;animation-delay:0.4s"/>
-              <circle cx="28" cy="250" r="2.0" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:3.0s;animation-delay:1.8s"/>
-              <circle cx="42" cy="265" r="1.5" clip-path="url(#liquidClip)" class="syr-bubble" style="animation-duration:1.7s;animation-delay:2.2s"/>
+              <!-- ③ Bubbles — SMIL cy animation so liquidClip clips correctly -->
+              <circle cx="31" r="3.5" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="2.4s" repeatCount="indefinite" begin="0s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="2.4s" repeatCount="indefinite" begin="0s"/>
+              </circle>
+              <circle cx="44" r="2.2" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="1.9s" repeatCount="indefinite" begin="-0.7s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="1.9s" repeatCount="indefinite" begin="-0.7s"/>
+              </circle>
+              <circle cx="36" r="2.8" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="2.8s" repeatCount="indefinite" begin="-1.3s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="2.8s" repeatCount="indefinite" begin="-1.3s"/>
+              </circle>
+              <circle cx="50" r="1.8" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="2.1s" repeatCount="indefinite" begin="-0.4s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="2.1s" repeatCount="indefinite" begin="-0.4s"/>
+              </circle>
+              <circle cx="28" r="2.0" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="3.0s" repeatCount="indefinite" begin="-1.8s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="3.0s" repeatCount="indefinite" begin="-1.8s"/>
+              </circle>
+              <circle cx="42" r="1.5" clip-path="url(#liquidClip)" class="syr-bubble">
+                <animate attributeName="cy" from="270" to="60" dur="1.7s" repeatCount="indefinite" begin="-0.5s"/>
+                <animate attributeName="opacity" values="0;0.6;0.4;0" keyTimes="0;0.1;0.9;1" dur="1.7s" repeatCount="indefinite" begin="-0.5s"/>
+              </circle>
 
               <!-- ④ Graduation marks & labels (right side) -->
               <line x1="58" y1="270" x2="66" y2="270" class="syr-mark"/><text x="69" y="274" class="syr-mark-lbl" text-anchor="start">0%</text>
