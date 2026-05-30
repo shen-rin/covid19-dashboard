@@ -300,6 +300,69 @@
     }
     .dleg .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
+    /* ─── SYRINGE ─── */
+    .vacc-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+    .syringe-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 90px;
+      padding: 0.5rem 0.5rem 0.5rem 0;
+      user-select: none;
+    }
+    .syringe-country {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--dim);
+      text-align: center;
+      margin-bottom: 2px;
+      min-height: 28px;
+      line-height: 1.3;
+    }
+    .syringe-pct {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 6px;
+      min-height: 22px;
+    }
+    .syringe-wrap {
+      width: 80px;
+      flex: 1;
+    }
+    .syringe-wrap svg {
+      width: 100%;
+      height: 100%;
+    }
+    .vacc-chart-area {
+      flex: 1;
+      height: 310px;
+    }
+    /* SVG element classes */
+    .syr-metal { fill: var(--syr-metal); }
+    .syr-barrel { fill: none; stroke: var(--syr-metal); stroke-width: 1.5; }
+    .syr-liquid { fill: #2ed573; opacity: 0.85; transition: none; }
+    .syr-mark { stroke: var(--syr-metal); stroke-width: 1.2; }
+    .syr-tick { stroke: var(--syr-metal); stroke-width: 0.8; opacity: 0.6; }
+    .syr-mark-lbl { fill: var(--dim); font-size: 6px; font-family: -apple-system, sans-serif; }
+    .syr-plunger { fill: var(--syr-plunger); }
+    .syr-needle-hub { fill: #b0b8c8; }
+    .syr-needle { stroke: #c0c8d8; stroke-width: 1.5; stroke-linecap: round; }
+    :root {
+      --syr-metal: #8899aa;
+      --syr-plunger: #667788;
+    }
+    [data-theme="light"] {
+      --syr-metal: #7a8898;
+      --syr-plunger: #55697a;
+    }
+
     /* ─── SOURCES ─── */
     .sources {
       max-width: 1160px; margin: 0 auto;
@@ -508,11 +571,67 @@
       <div class="card-head">
         <div>
           <div class="card-title">Who Got Vaccinated?</div>
-          <div class="card-sub">Peak single-dose coverage · Russia shown in red</div>
+          <div class="card-sub">Peak single-dose coverage · Russia shown in red · hover a bar to fill syringe</div>
         </div>
       </div>
-      <div class="cv" style="height:310px">
-        <canvas id="cVacc"></canvas>
+      <div class="vacc-layout">
+        <!-- Syringe -->
+        <div class="syringe-panel">
+          <div class="syringe-country" id="syringeLabel">World Avg</div>
+          <div class="syringe-pct" id="syringePct">—</div>
+          <div class="syringe-wrap">
+            <svg id="syringeSvg" viewBox="0 0 80 320" xmlns="http://www.w3.org/2000/svg">
+              <!-- Barrel clip-path -->
+              <defs>
+                <clipPath id="barrelClip">
+                  <rect x="22" y="60" width="36" height="210" rx="4"/>
+                </clipPath>
+              </defs>
+
+              <!-- Plunger handle (T-bar) -->
+              <rect x="12" y="12" width="56" height="8" rx="3" class="syr-metal"/>
+              <rect x="36" y="20" width="8" height="22" class="syr-metal"/>
+
+              <!-- Barrel outline -->
+              <rect x="22" y="60" width="36" height="210" rx="4" class="syr-barrel"/>
+
+              <!-- Liquid fill (clipped to barrel) — animated via JS -->
+              <rect id="syringeFill" x="22" y="270" width="36" height="0" rx="4" clip-path="url(#barrelClip)" class="syr-liquid"/>
+
+              <!-- Graduation marks & labels -->
+              <line x1="22" y1="270" x2="14" y2="270" class="syr-mark"/><text x="11" y="274" class="syr-mark-lbl" text-anchor="end">0%</text>
+              <line x1="22" y1="228" x2="14" y2="228" class="syr-mark"/><text x="11" y="232" class="syr-mark-lbl" text-anchor="end">20%</text>
+              <line x1="22" y1="186" x2="14" y2="186" class="syr-mark"/><text x="11" y="190" class="syr-mark-lbl" text-anchor="end">40%</text>
+              <line x1="22" y1="144" x2="14" y2="144" class="syr-mark"/><text x="11" y="148" class="syr-mark-lbl" text-anchor="end">60%</text>
+              <line x1="22" y1="102" x2="14" y2="102" class="syr-mark"/><text x="11" y="106" class="syr-mark-lbl" text-anchor="end">80%</text>
+              <line x1="22" y1="60"  x2="14" y2="60"  class="syr-mark"/><text x="11" y="64"  class="syr-mark-lbl" text-anchor="end">100%</text>
+
+              <!-- Minor ticks between major marks -->
+              <line x1="22" y1="249" x2="18" y2="249" class="syr-tick"/>
+              <line x1="22" y1="207" x2="18" y2="207" class="syr-tick"/>
+              <line x1="22" y1="165" x2="18" y2="165" class="syr-tick"/>
+              <line x1="22" y1="123" x2="18" y2="123" class="syr-tick"/>
+              <line x1="22" y1="81"  x2="18" y2="81"  class="syr-tick"/>
+
+              <!-- Barrel-to-nozzle transition -->
+              <polygon points="22,270 58,270 54,285 26,285" class="syr-metal"/>
+
+              <!-- Nozzle -->
+              <rect x="33" y="285" width="14" height="18" rx="2" class="syr-metal"/>
+
+              <!-- Needle hub + needle -->
+              <rect x="36" y="303" width="8" height="6" class="syr-needle-hub"/>
+              <line x1="40" y1="309" x2="40" y2="319" class="syr-needle"/>
+
+              <!-- Plunger rod inside barrel -->
+              <rect id="syringePlunger" x="36" y="60" width="8" height="6" rx="1" class="syr-plunger"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Chart -->
+        <div class="cv vacc-chart-area">
+          <canvas id="cVacc"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -906,6 +1025,55 @@ function buildRegional() {
 
 
 /* ═══════════════════════════════════════════════════
+   SYRINGE
+   ═══════════════════════════════════════════════════ */
+let _syringeRaf = null;
+let _syringeTarget = 0;
+let _syringeCurrent = 0;
+
+function updateSyringe(pct, name) {
+  _syringeTarget = Math.max(0, Math.min(100, pct || 0));
+  document.getElementById('syringeLabel').textContent = name || 'World Avg';
+  document.getElementById('syringePct').textContent = pct != null ? pct.toFixed(1) + '%' : '—';
+  if (_syringeRaf) cancelAnimationFrame(_syringeRaf);
+  animateSyringe();
+}
+
+function animateSyringe() {
+  const diff = _syringeTarget - _syringeCurrent;
+  if (Math.abs(diff) < 0.1) {
+    _syringeCurrent = _syringeTarget;
+    _drawSyringe(_syringeCurrent);
+    return;
+  }
+  _syringeCurrent += diff * 0.12;
+  _drawSyringe(_syringeCurrent);
+  _syringeRaf = requestAnimationFrame(animateSyringe);
+}
+
+function _drawSyringe(pct) {
+  // Barrel runs from y=60 (100%) to y=270 (0%). Total height = 210px.
+  const barrelTop = 60, barrelBot = 270, barrelH = 210;
+  const fillH = (pct / 100) * barrelH;
+  const fillY = barrelBot - fillH;
+
+  const fill = document.getElementById('syringeFill');
+  const plunger = document.getElementById('syringePlunger');
+  if (!fill || !plunger) return;
+
+  fill.setAttribute('y', fillY);
+  fill.setAttribute('height', fillH);
+  plunger.setAttribute('y', Math.max(barrelTop, fillY - 6));
+
+  // Color: green when high, orange at mid, red when very low
+  let color;
+  if (pct >= 60) color = '#2ed573';
+  else if (pct >= 35) color = '#ffaa00';
+  else color = '#ff4040';
+  fill.style.fill = color;
+}
+
+/* ═══════════════════════════════════════════════════
    VACCINATION
    ═══════════════════════════════════════════════════ */
 function buildVacc() {
@@ -923,6 +1091,10 @@ function buildVacc() {
   const ctx = document.getElementById('cVacc').getContext('2d');
   if (charts.vacc) charts.vacc.destroy();
 
+  // Compute world avg for syringe init
+  const worldEntry = DATA['World'];
+  const worldAvg = worldEntry ? Math.max(...worldEntry.data.map(x => x.vp || 0)) : 0;
+
   charts.vacc = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -936,6 +1108,15 @@ function buildVacc() {
     },
     options: {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      onHover(event, elements) {
+        if (elements.length) {
+          const idx = elements[0].index;
+          const pt = pts[idx];
+          updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c);
+        } else {
+          updateSyringe(worldAvg, 'World Avg');
+        }
+      },
       plugins: {
         legend: { display: false },
         tooltip: { ...tooltipStyle(tc),
@@ -949,6 +1130,9 @@ function buildVacc() {
       }
     }
   });
+
+  // Initialise syringe to world average
+  updateSyringe(worldAvg, 'World Avg');
 }
 
 /* ═══════════════════════════════════════════════════
