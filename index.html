@@ -312,7 +312,7 @@
       align-items: center;
       flex-shrink: 0;
       width: 150px;
-      padding: 0.5rem 1rem 0.5rem 0;
+      padding: 0.5rem 1rem 0.5rem 2rem;
       user-select: none;
     }
     .syringe-country {
@@ -339,11 +339,12 @@
     .syringe-wrap svg {
       width: 100%;
       height: 100%;
+      overflow: visible;
     }
     .vacc-chart-area {
       flex: 0 0 460px;
-      height: 310px;
-      margin-top: 42px;
+      height: 400px;
+      margin-top: 80px;
     }
     /* SVG element classes */
     .syr-metal { fill: var(--syr-metal); }
@@ -363,6 +364,16 @@
       --syr-metal: #7a8898;
       --syr-plunger: #55697a;
     }
+
+    .units-note {
+      font-size: .67rem;
+      color: var(--dim);
+      margin-top: .6rem;
+      line-height: 1.7;
+      padding: .4rem .5rem;
+      border-left: 2px solid var(--border);
+    }
+    .units-note b { color: var(--text); font-weight: 600; }
 
     /* ─── SOURCES ─── */
     .sources {
@@ -473,6 +484,11 @@
       <div class="cv" style="height:190px;margin-top:.8rem">
         <canvas id="cTimeline"></canvas>
       </div>
+      <div class="units-note">
+        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
+        <b>Y-axis</b> — number of newly reported cases or deaths in that 7-day window worldwide. &nbsp;
+        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
+      </div>
 
       <!-- ── Donut row ── -->
       <div class="donut-section">
@@ -523,6 +539,11 @@
           </div>
         </div>
         <div class="donut-legend" id="donutLegend"></div>
+        <div class="units-note">
+          <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+          <b>Cases / Deaths</b> — total confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
+          <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
+        </div>
       </div>
 
     </div>
@@ -540,6 +561,11 @@
       </div>
       <div class="cv" style="height:380px">
         <canvas id="cRegional"></canvas>
+      </div>
+      <div class="units-note">
+        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
+        <b>Deaths (right axis)</b> — cumulative confirmed deaths since January 2020, in thousands.
       </div>
     </div>
   </div>
@@ -633,6 +659,11 @@
         <div class="cv vacc-chart-area">
           <canvas id="cVacc"></canvas>
         </div>
+      </div>
+      <div class="units-note">
+        <b>%</b> = percentage of the country's total population &nbsp;·&nbsp;
+        <b>≥1 dose</b> = received at least one vaccine dose (not necessarily fully vaccinated) &nbsp;·&nbsp;
+        <b>Peak</b> = highest single-dose coverage ever recorded for that country.
       </div>
     </div>
   </div>
@@ -1030,6 +1061,7 @@ function buildRegional() {
    ═══════════════════════════════════════════════════ */
 let _syringeRaf = null;
 let _syringeTarget = 0;
+let hoveredVaccIdx = -1;
 let _syringeCurrent = 0;
 
 function updateSyringe(pct, name) {
@@ -1092,6 +1124,8 @@ function buildVacc() {
   const ctx = document.getElementById('cVacc').getContext('2d');
   if (charts.vacc) charts.vacc.destroy();
 
+  hoveredVaccIdx = -1;
+
   // Compute world avg for syringe init
   const worldEntry = DATA['World'];
   const worldAvg = worldEntry ? Math.max(...worldEntry.data.map(x => x.vp || 0)) : 0;
@@ -1111,9 +1145,13 @@ function buildVacc() {
     options: {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
       onHover(event, elements) {
+        const newIdx = elements.length ? elements[0].index : -1;
+        if (newIdx !== hoveredVaccIdx) {
+          hoveredVaccIdx = newIdx;
+          if (charts.vacc) charts.vacc.update('none');
+        }
         if (elements.length) {
-          const idx = elements[0].index;
-          const pt = pts[idx];
+          const pt = pts[elements[0].index];
           updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c);
         } else {
           updateSyringe(worldAvg, 'World Avg');
@@ -1128,7 +1166,10 @@ function buildVacc() {
       scales: {
         x: { ...axisStyle(tc), min: 0, max: 100,
              ticks: { color: tc.tick, callback: v => v + '%' } },
-        y: { ...axisStyle(tc), ticks: { color: tc.labelColor, font: { size: 11 } } }
+        y: { ...axisStyle(tc), ticks: {
+          color: (ctx) => ctx.index === hoveredVaccIdx ? '#4db6c8' : tc.labelColor,
+          font: { size: 11, weight: '700' }
+        }}
       }
     }
   });
