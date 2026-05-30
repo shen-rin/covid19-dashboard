@@ -311,8 +311,9 @@
       flex-direction: column;
       align-items: center;
       flex-shrink: 0;
-      width: 230px;
-      padding: 0.5rem 2rem 0.5rem 7rem;
+      width: 180px;
+      margin-left: auto;
+      padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
     .syringe-country {
@@ -352,7 +353,17 @@
     /* SVG element classes */
     .syr-metal { fill: var(--syr-metal); }
     .syr-barrel { fill: none; stroke: var(--syr-metal); stroke-width: 1.5; }
-    .syr-liquid { fill: #4db6c8; opacity: 0.85; transition: none; }
+    .syr-liquid { fill: #4db6c8; opacity: 0.38; transition: none; }
+    .syr-bubble {
+      fill: rgba(255,255,255,0.55);
+      animation: bubbleRise linear infinite;
+    }
+    @keyframes bubbleRise {
+      0%   { transform: translateY(0);     opacity: 0;   }
+      12%  { opacity: 0.65; }
+      88%  { opacity: 0.35; }
+      100% { transform: translateY(-195px); opacity: 0; }
+    }
     .syr-mark { stroke: var(--syr-metal); stroke-width: 1.2; }
     .syr-tick { stroke: var(--syr-metal); stroke-width: 0.8; opacity: 0.6; }
     .syr-mark-lbl { fill: var(--dim); font-size: 6px; font-family: -apple-system, sans-serif; }
@@ -635,6 +646,14 @@
               <!-- Needle hub + needle -->
               <rect x="36" y="303" width="8" height="6" class="syr-needle-hub"/>
               <line x1="40" y1="309" x2="40" y2="319" class="syr-needle"/>
+
+              <!-- Bubbles (clipped to barrel, animate upward) -->
+              <circle cx="31" cy="262" r="3.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.4s;animation-delay:0.0s"/>
+              <circle cx="44" cy="255" r="2.2" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.9s;animation-delay:0.7s"/>
+              <circle cx="36" cy="268" r="2.8" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.8s;animation-delay:1.3s"/>
+              <circle cx="50" cy="260" r="1.8" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.1s;animation-delay:0.4s"/>
+              <circle cx="28" cy="250" r="2.0" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:3.0s;animation-delay:1.8s"/>
+              <circle cx="42" cy="265" r="1.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.7s;animation-delay:2.2s"/>
 
               <!-- Plunger rod inside barrel -->
               <rect id="syringePlunger" x="36" y="60" width="8" height="6" rx="1" class="syr-plunger"/>
@@ -1103,9 +1122,9 @@ function _drawSyringe(pct) {
 
   // Color: teal-blue when high, muted steel at mid, desaturated rose when low
   let color;
-  if (pct >= 60) color = '#4db6c8';
-  else if (pct >= 35) color = '#7aaabb';
-  else color = '#c07080';
+  if (pct >= 60) color = 'rgba(77,182,200,0.38)';
+  else if (pct >= 35) color = 'rgba(122,170,187,0.38)';
+  else color = 'rgba(192,112,128,0.38)';
   fill.style.fill = color;
 }
 
