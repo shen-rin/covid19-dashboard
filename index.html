@@ -607,49 +607,26 @@
           <div class="syringe-pct" id="syringePct">—</div>
           <div class="syringe-wrap">
             <svg id="syringeSvg" viewBox="0 0 80 320" xmlns="http://www.w3.org/2000/svg">
-              <!-- Barrel clip-path -->
               <defs>
                 <clipPath id="barrelClip">
                   <rect x="22" y="60" width="36" height="210" rx="4"/>
                 </clipPath>
+                <!-- Rubber stopper gradient -->
+                <linearGradient id="stopperGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%"   stop-color="#2c3e50"/>
+                  <stop offset="35%"  stop-color="#4a6278"/>
+                  <stop offset="65%"  stop-color="#4a6278"/>
+                  <stop offset="100%" stop-color="#2c3e50"/>
+                </linearGradient>
               </defs>
 
-              <!-- Plunger handle (T-bar) -->
-              <rect x="12" y="12" width="56" height="8" rx="3" class="syr-metal"/>
-              <rect x="36" y="20" width="8" height="22" class="syr-metal"/>
-
-              <!-- Barrel outline -->
+              <!-- ① Barrel outline -->
               <rect x="22" y="60" width="36" height="210" rx="4" class="syr-barrel"/>
 
-              <!-- Liquid fill (clipped to barrel) — animated via JS -->
+              <!-- ② Liquid fill (clipped to barrel) -->
               <rect id="syringeFill" x="22" y="270" width="36" height="0" rx="4" clip-path="url(#barrelClip)" class="syr-liquid"/>
 
-              <!-- Graduation marks & labels (right side of barrel) -->
-              <line x1="58" y1="270" x2="66" y2="270" class="syr-mark"/><text x="69" y="274" class="syr-mark-lbl" text-anchor="start">0%</text>
-              <line x1="58" y1="228" x2="66" y2="228" class="syr-mark"/><text x="69" y="232" class="syr-mark-lbl" text-anchor="start">20%</text>
-              <line x1="58" y1="186" x2="66" y2="186" class="syr-mark"/><text x="69" y="190" class="syr-mark-lbl" text-anchor="start">40%</text>
-              <line x1="58" y1="144" x2="66" y2="144" class="syr-mark"/><text x="69" y="148" class="syr-mark-lbl" text-anchor="start">60%</text>
-              <line x1="58" y1="102" x2="66" y2="102" class="syr-mark"/><text x="69" y="106" class="syr-mark-lbl" text-anchor="start">80%</text>
-              <line x1="58" y1="60"  x2="66" y2="60"  class="syr-mark"/><text x="69" y="64"  class="syr-mark-lbl" text-anchor="start">100%</text>
-
-              <!-- Minor ticks (right side) -->
-              <line x1="58" y1="249" x2="62" y2="249" class="syr-tick"/>
-              <line x1="58" y1="207" x2="62" y2="207" class="syr-tick"/>
-              <line x1="58" y1="165" x2="62" y2="165" class="syr-tick"/>
-              <line x1="58" y1="123" x2="62" y2="123" class="syr-tick"/>
-              <line x1="58" y1="81"  x2="62" y2="81"  class="syr-tick"/>
-
-              <!-- Barrel-to-nozzle transition -->
-              <polygon points="22,270 58,270 54,285 26,285" class="syr-metal"/>
-
-              <!-- Nozzle -->
-              <rect x="33" y="285" width="14" height="18" rx="2" class="syr-metal"/>
-
-              <!-- Needle hub + needle -->
-              <rect x="36" y="303" width="8" height="6" class="syr-needle-hub"/>
-              <line x1="40" y1="309" x2="40" y2="319" class="syr-needle"/>
-
-              <!-- Bubbles (clipped to barrel, animate upward) -->
+              <!-- ③ Bubbles -->
               <circle cx="31" cy="262" r="3.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.4s;animation-delay:0.0s"/>
               <circle cx="44" cy="255" r="2.2" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.9s;animation-delay:0.7s"/>
               <circle cx="36" cy="268" r="2.8" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:2.8s;animation-delay:1.3s"/>
@@ -657,8 +634,38 @@
               <circle cx="28" cy="250" r="2.0" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:3.0s;animation-delay:1.8s"/>
               <circle cx="42" cy="265" r="1.5" clip-path="url(#barrelClip)" class="syr-bubble" style="animation-duration:1.7s;animation-delay:2.2s"/>
 
-              <!-- Plunger rod inside barrel -->
-              <rect id="syringePlunger" x="36" y="60" width="8" height="6" rx="1" class="syr-plunger"/>
+              <!-- ④ Graduation marks & labels (right side) -->
+              <line x1="58" y1="270" x2="66" y2="270" class="syr-mark"/><text x="69" y="274" class="syr-mark-lbl" text-anchor="start">0%</text>
+              <line x1="58" y1="228" x2="66" y2="228" class="syr-mark"/><text x="69" y="232" class="syr-mark-lbl" text-anchor="start">20%</text>
+              <line x1="58" y1="186" x2="66" y2="186" class="syr-mark"/><text x="69" y="190" class="syr-mark-lbl" text-anchor="start">40%</text>
+              <line x1="58" y1="144" x2="66" y2="144" class="syr-mark"/><text x="69" y="148" class="syr-mark-lbl" text-anchor="start">60%</text>
+              <line x1="58" y1="102" x2="66" y2="102" class="syr-mark"/><text x="69" y="106" class="syr-mark-lbl" text-anchor="start">80%</text>
+              <line x1="58" y1="60"  x2="66" y2="60"  class="syr-mark"/><text x="69" y="64"  class="syr-mark-lbl" text-anchor="start">100%</text>
+              <line x1="58" y1="249" x2="62" y2="249" class="syr-tick"/>
+              <line x1="58" y1="207" x2="62" y2="207" class="syr-tick"/>
+              <line x1="58" y1="165" x2="62" y2="165" class="syr-tick"/>
+              <line x1="58" y1="123" x2="62" y2="123" class="syr-tick"/>
+              <line x1="58" y1="81"  x2="62" y2="81"  class="syr-tick"/>
+
+              <!-- ⑤ Barrel-to-nozzle taper, nozzle, needle -->
+              <polygon points="22,270 58,270 54,285 26,285" class="syr-metal"/>
+              <rect x="33" y="285" width="14" height="18" rx="2" class="syr-metal"/>
+              <rect x="36" y="303" width="8" height="6" class="syr-needle-hub"/>
+              <line x1="40" y1="309" x2="40" y2="319" class="syr-needle"/>
+
+              <!-- ⑥ Plunger stopper — full barrel width, drawn above liquid -->
+              <rect id="syringePlunger" x="22" y="47" width="36" height="13" rx="3" fill="url(#stopperGrad)"/>
+              <!-- Stopper highlight ridge -->
+              <rect id="syringeStopperRidge" x="24" y="52" width="32" height="3" rx="1" fill="#5a7a92" opacity="0.6"/>
+
+              <!-- ⑦ Plunger rod — thin bar from neck to barrel top -->
+              <rect x="38" y="30" width="4" height="30" rx="1" class="syr-metal"/>
+
+              <!-- ⑧ Neck (wider section just below T-bar) -->
+              <rect x="34" y="19" width="12" height="13" rx="2" class="syr-metal"/>
+
+              <!-- ⑨ T-bar handle -->
+              <rect x="10" y="10" width="60" height="10" rx="3" class="syr-metal"/>
             </svg>
           </div>
         </div>
@@ -1109,18 +1116,22 @@ function animateSyringe() {
 }
 
 function _drawSyringe(pct) {
-  // Barrel runs from y=60 (100%) to y=270 (0%). Total height = 210px.
+  // Barrel: y=60 (top/100%) to y=270 (bottom/0%), height=210
   const barrelTop = 60, barrelBot = 270, barrelH = 210;
-  const fillH = (pct / 100) * barrelH;
-  const fillY = barrelBot - fillH;
+  const stopperH = 13;
+  const fillH  = (pct / 100) * barrelH;
+  const fillY  = barrelBot - fillH;                               // top of liquid
+  const stopperY = Math.max(barrelTop - stopperH, fillY - stopperH); // stopper sits just above liquid
 
-  const fill = document.getElementById('syringeFill');
+  const fill    = document.getElementById('syringeFill');
   const plunger = document.getElementById('syringePlunger');
+  const ridge   = document.getElementById('syringeStopperRidge');
   if (!fill || !plunger) return;
 
   fill.setAttribute('y', fillY);
   fill.setAttribute('height', fillH);
-  plunger.setAttribute('y', Math.max(barrelTop, fillY - 6));
+  plunger.setAttribute('y', stopperY);
+  if (ridge) ridge.setAttribute('y', stopperY + 5);
 
   // Color: teal-blue when high, muted steel at mid, desaturated rose when low
   let color;
