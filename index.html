@@ -64,6 +64,25 @@
     body::before { left: 6px; }
     body::after  { right: 6px; }
 
+    /* ─── HATCH BARS (behind rainbow) ─── */
+    html::before, html::after {
+      content: '';
+      position: fixed;
+      top: 0; bottom: 0;
+      width: 22px;
+      z-index: 9997;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 3px,
+        rgba(160,160,160,0.22) 3px,
+        rgba(160,160,160,0.22) 4.5px
+      );
+    }
+    html::before { left: 0; }
+    html::after  { right: 0; }
+
     /* ─── HERO ─── */
     .hero {
       background: linear-gradient(135deg, var(--hero-bg) 0%, var(--hero-mid) 55%, var(--hero-bg) 100%);
