@@ -1124,19 +1124,20 @@ function _onVaccMove(e) {
   if (!chart.chartArea) return;
   const canvas = chart.canvas;
   const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const mx = (e.clientX - rect.left) * scaleX;
-  const my = (e.clientY - rect.top) * scaleY;
+  // CSS pixels — Chart.js getValueForPixel uses CSS pixel space
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
   const { chartArea, scales: { y: yScale } } = chart;
 
   let newIdx = -1;
-  if (mx < chartArea.left) {
-    const step = yScale.height / vaccPts.length;
-    for (let i = 0; i < vaccPts.length; i++) {
-      if (Math.abs(my - yScale.getPixelForValue(i)) < step * 0.5) { newIdx = i; break; }
-    }
-  } else {
+  if (mx >= 0 && mx < chartArea.left) {
+    // Label area: use Chart.js inverse transform to get the nearest category index
+    const raw = yScale.getValueForPixel(my);
+    const idx = Math.round(raw);
+    if (idx >= 0 && idx < vaccPts.length) newIdx = idx;
+  } else if (mx >= chartArea.left && mx <= chartArea.right &&
+             my >= chartArea.top  && my <= chartArea.bottom) {
+    // Plot area: ask Chart.js which bar element is under the cursor
     const els = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
     if (els.length) newIdx = els[0].index;
   }
