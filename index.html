@@ -92,6 +92,7 @@
       border-bottom: 1px solid var(--border);
       padding: 2.5rem 2rem 2rem;
       transition: background .25s;
+      position: relative;
     }
     .hero-inner {
       max-width: 1160px;
@@ -441,13 +442,13 @@
       border-top: 1px solid var(--border);
     }
     .corona-deco {
-      position: fixed;
-      top: 3.5rem;
+      position: absolute;
+      top: 2rem;
       right: 16rem;
       width: 130px;
       height: 130px;
       opacity: 0.6;
-      z-index: 10000;
+      z-index: 10;
       display: block;
       pointer-events: none;
     }
@@ -455,41 +456,38 @@
 </head>
 <body>
 
-<!-- Decorative coronavirus illustration, top-right corner -->
-<svg class="corona-deco" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <g transform="translate(60,60)" fill="#00e5ff">
-    <!-- 12 main long spikes -->
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(0)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(30)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(60)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(90)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(120)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(150)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(180)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(210)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(240)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(270)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(300)"/>
-    <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(330)"/>
-    <!-- 12 shorter secondary spikes at 15° offsets -->
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(15)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(45)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(75)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(105)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(135)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(165)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(195)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(225)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(255)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(285)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(315)"/>
-    <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(345)"/>
-  </g>
-  <circle cx="60" cy="60" r="32" fill="#00e5ff"/>
-</svg>
-
 <!-- ═══════════ HERO ═══════════ -->
 <div class="hero">
+  <!-- Decorative coronavirus illustration -->
+  <svg class="corona-deco" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g transform="translate(60,60)" fill="#00e5ff">
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(0)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(30)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(60)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(90)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(120)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(150)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(180)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(210)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(240)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(270)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(300)"/>
+      <rect x="-3.5" y="-53" width="7" height="22" rx="3.5" transform="rotate(330)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(15)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(45)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(75)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(105)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(135)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(165)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(195)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(225)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(255)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(285)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(315)"/>
+      <rect x="-2.5" y="-46" width="5" height="15" rx="2.5" transform="rotate(345)"/>
+    </g>
+    <circle cx="60" cy="60" r="32" fill="#00e5ff"/>
+  </svg>
   <div class="hero-inner">
     <div class="hero-top">
       <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
