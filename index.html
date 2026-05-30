@@ -1114,6 +1114,54 @@ let _syringeTarget = 0;
 let hoveredVaccIdx = -1;
 let _syringeCurrent = 0;
 
+let vaccPts = [];
+let vaccWorldAvg = 0;
+let _vaccListenersAttached = false;
+
+function _onVaccMove(e) {
+  if (!charts.vacc) return;
+  const chart = charts.vacc;
+  if (!chart.chartArea) return;
+  const canvas = chart.canvas;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mx = (e.clientX - rect.left) * scaleX;
+  const my = (e.clientY - rect.top) * scaleY;
+  const { chartArea, scales: { y: yScale } } = chart;
+
+  let newIdx = -1;
+  if (mx < chartArea.left) {
+    const step = yScale.height / vaccPts.length;
+    for (let i = 0; i < vaccPts.length; i++) {
+      if (Math.abs(my - yScale.getPixelForValue(i)) < step * 0.5) { newIdx = i; break; }
+    }
+  } else {
+    const els = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+    if (els.length) newIdx = els[0].index;
+  }
+
+  if (newIdx !== hoveredVaccIdx) {
+    hoveredVaccIdx = newIdx;
+    chart.update('none');
+    if (newIdx >= 0) {
+      const pt = vaccPts[newIdx];
+      updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c);
+    } else {
+      updateSyringe(vaccWorldAvg, 'World Avg');
+    }
+  }
+  canvas.style.cursor = newIdx >= 0 ? 'pointer' : 'default';
+}
+
+function _onVaccLeave() {
+  if (hoveredVaccIdx !== -1) {
+    hoveredVaccIdx = -1;
+    if (charts.vacc) charts.vacc.update('none');
+  }
+  updateSyringe(vaccWorldAvg, 'World Avg');
+}
+
 function updateSyringe(pct, name) {
   _syringeTarget = Math.max(0, Math.min(100, pct || 0));
   document.getElementById('syringeLabel').textContent = name || 'World Avg';
@@ -1179,10 +1227,8 @@ function buildVacc() {
   if (charts.vacc) charts.vacc.destroy();
 
   hoveredVaccIdx = -1;
-
-  // Compute world avg for syringe init
-  const worldEntry = DATA['World'];
-  const worldAvg = worldEntry ? Math.max(...worldEntry.data.map(x => x.vp || 0)) : 0;
+  vaccPts = pts;
+  vaccWorldAvg = (DATA['World'] ? Math.max(...DATA['World'].data.map(x => x.vp || 0)) : 0);
 
   charts.vacc = new Chart(ctx, {
     type: 'bar',
@@ -1206,19 +1252,7 @@ function buildVacc() {
     },
     options: {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-      onHover(event, elements) {
-        const newIdx = elements.length ? elements[0].index : -1;
-        if (newIdx !== hoveredVaccIdx) {
-          hoveredVaccIdx = newIdx;
-          if (charts.vacc) charts.vacc.update('none');
-        }
-        if (elements.length) {
-          const pt = pts[elements[0].index];
-          updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c);
-        } else {
-          updateSyringe(worldAvg, 'World Avg');
-        }
-      },
+      events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
       plugins: {
         legend: { display: false },
         tooltip: { ...tooltipStyle(tc),
@@ -1236,8 +1270,14 @@ function buildVacc() {
     }
   });
 
-  // Initialise syringe to world average
-  updateSyringe(worldAvg, 'World Avg');
+  // Attach canvas listeners once (survive theme rebuilds)
+  if (!_vaccListenersAttached) {
+    _vaccListenersAttached = true;
+    ctx.canvas.addEventListener('mousemove', _onVaccMove);
+    ctx.canvas.addEventListener('mouseleave', _onVaccLeave);
+  }
+
+  updateSyringe(vaccWorldAvg, 'World Avg');
 }
 
 /* ═══════════════════════════════════════════════════
