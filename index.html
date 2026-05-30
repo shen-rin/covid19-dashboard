@@ -313,6 +313,7 @@
       flex-shrink: 0;
       width: 180px;
       margin-left: auto;
+      margin-right: 4rem;
       padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
@@ -342,7 +343,7 @@
       width: 100%;
       height: 100%;
       overflow: visible;
-      transform: rotate(45deg);
+      transform: rotate(35deg);
       transform-origin: center center;
     }
     .vacc-chart-area {
@@ -353,7 +354,7 @@
     /* SVG element classes */
     .syr-metal { fill: var(--syr-metal); }
     .syr-barrel { fill: none; stroke: var(--syr-metal); stroke-width: 1.5; }
-    .syr-liquid { fill: #4db6c8; opacity: 0.38; transition: none; }
+    .syr-liquid { fill: #00bcd4; opacity: 0.58; transition: none; }
     .syr-bubble {
       fill: rgba(255,255,255,0.55);
       animation: bubbleRise linear infinite;
@@ -1122,9 +1123,9 @@ function _drawSyringe(pct) {
 
   // Color: teal-blue when high, muted steel at mid, desaturated rose when low
   let color;
-  if (pct >= 60) color = 'rgba(77,182,200,0.38)';
-  else if (pct >= 35) color = 'rgba(122,170,187,0.38)';
-  else color = 'rgba(192,112,128,0.38)';
+  if (pct >= 60) color = 'rgba(0,188,212,0.58)';
+  else if (pct >= 35) color = 'rgba(100,181,187,0.58)';
+  else color = 'rgba(200,100,120,0.58)';
   fill.style.fill = color;
 }
 
