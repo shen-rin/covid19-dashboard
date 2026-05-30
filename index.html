@@ -657,7 +657,7 @@ function makeDatasets() {
 
 const YEAR_LINES = {
   id: 'yearLines',
-  afterDraw(chart) {
+  afterDatasetsDraw(chart) {
     const { ctx, scales: { x }, chartArea } = chart;
     const labels = chart.data.labels;
     if (!labels || !x) return;
