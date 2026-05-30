@@ -458,7 +458,7 @@
           <div class="card-sub">Cumulative totals, millions</div>
         </div>
       </div>
-      <div class="cv" style="height:260px">
+      <div class="cv" style="height:380px">
         <canvas id="cRegional"></canvas>
       </div>
     </div>
@@ -791,8 +791,30 @@ function buildRegional() {
   const ctx = document.getElementById('cRegional').getContext('2d');
   if (charts.regional) charts.regional.destroy();
 
+  const barLabelsPlugin = {
+    id: 'barLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx, scales: { yC } } = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        if (ds.yAxisID !== 'yC') return;
+        chart.getDatasetMeta(di).data.forEach((bar, i) => {
+          const val = ds.data[i];
+          if (!val) return;
+          const label = val >= 1 ? val.toFixed(1) + 'M' : (val * 1000).toFixed(0) + 'K';
+          ctx.save();
+          ctx.font = '600 10px -apple-system, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = isDark ? 'rgba(220,220,220,0.7)' : 'rgba(40,40,40,0.6)';
+          ctx.fillText(label, bar.x, bar.y - 5);
+          ctx.restore();
+        });
+      });
+    }
+  };
+
   charts.regional = new Chart(ctx, {
     type: 'bar',
+    plugins: [barLabelsPlugin],
     data: {
       labels: REGIONS_CFG.map(r => r.n),
       datasets: [
