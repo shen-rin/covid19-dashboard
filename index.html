@@ -440,9 +440,39 @@
       color: var(--dim); font-size: .7rem;
       border-top: 1px solid var(--border);
     }
+    .corona-deco {
+      position: fixed;
+      top: 0.8rem;
+      right: 5rem;
+      width: 160px;
+      height: 160px;
+      opacity: 0.6;
+      z-index: 10000;
+      display: block;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+
+<!-- Decorative coronavirus illustration, top-right corner -->
+<svg class="corona-deco" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g transform="translate(60,60)" fill="#4dd0e1">
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(0)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(30)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(60)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(90)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(120)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(150)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(180)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(210)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(240)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(270)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(300)"/>
+    <rect x="-3.5" y="-52" width="7" height="22" rx="3.5" transform="rotate(330)"/>
+  </g>
+  <circle cx="60" cy="60" r="32" fill="#4dd0e1"/>
+</svg>
 
 <!-- ═══════════ HERO ═══════════ -->
 <div class="hero">
@@ -463,12 +493,12 @@
         <div class="kpi-note">cumulative, as of Aug 2024</div>
       </div>
       <div class="kpi deaths">
-        <div class="kpi-lbl">Global Deaths</div>
+        <div class="kpi-lbl">Global COVID Deaths</div>
         <div class="kpi-val" id="kGD">—</div>
         <div class="kpi-note">official WHO-reported</div>
       </div>
       <div class="kpi accent">
-        <div class="kpi-lbl">Russia Official Deaths</div>
+        <div class="kpi-lbl">Russia Official COVID Deaths</div>
         <div class="kpi-val" id="kRD">—</div>
         <div class="kpi-note" id="kRShare">— of Europe's toll</div>
       </div>
@@ -495,7 +525,7 @@
 
   <!-- Timeline -->
   <div class="sec">
-    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / Deaths</div>
+    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
     <div class="card">
       <div class="card-head">
         <div>
@@ -505,7 +535,7 @@
         <div class="ctrl-row">
           <div class="btn-grp">
             <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
-            <button        id="bDeaths" onclick="setMetric('deaths')">Deaths</button>
+            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
             <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
           </div>
         </div>
@@ -515,7 +545,7 @@
       </div>
       <div class="units-note">
         <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
-        <b>Y-axis</b> — number of newly reported cases or deaths in that 7-day window worldwide. &nbsp;
+        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
         <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
       </div>
 
@@ -525,7 +555,7 @@
           <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
           <div class="btn-grp">
             <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
-            <button            id="dDeaths" onclick="setDonutMetric('deaths')">Deaths</button>
+            <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
             <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
           </div>
         </div>
@@ -570,7 +600,7 @@
         <div class="donut-legend" id="donutLegend"></div>
         <div class="units-note">
           <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-          <b>Cases / Deaths</b> — total confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
+          <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
           <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
         </div>
       </div>
@@ -594,7 +624,7 @@
       <div class="units-note">
         <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
         <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
-        <b>Deaths (right axis)</b> — cumulative confirmed deaths since January 2020, in thousands.
+        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
       </div>
     </div>
   </div>
@@ -1070,7 +1100,7 @@ function buildRegional() {
           yAxisID: 'yC'
         },
         {
-          label: 'Deaths (K)',
+          label: 'COVID Deaths (K)',
           data:                 REGIONS_CFG.map(r => (DATA[r.n]?.td || 0) / 1e3),
           backgroundColor:      '#ff404044',
           borderColor:          '#ff4040',
@@ -1167,9 +1197,9 @@ function _onVaccMove(e) {
     chart.update('none');
     if (newIdx >= 0) {
       const pt = vaccPts[newIdx];
-      updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c);
+      updateSyringe(pt.v, pt.c === 'United Kingdom' ? 'UK' : pt.c === 'United States' ? 'USA' : pt.c, pt.pop);
     } else {
-      updateSyringe(vaccWorldAvg, 'World Avg');
+      updateSyringe(vaccWorldAvg, 'World Avg', DATA['World']?.pop);
     }
   }
   canvas.style.cursor = newIdx >= 0 ? 'pointer' : 'default';
@@ -1180,13 +1210,23 @@ function _onVaccLeave() {
     hoveredVaccIdx = -1;
     if (charts.vacc) charts.vacc.update('none');
   }
-  updateSyringe(vaccWorldAvg, 'World Avg');
+  updateSyringe(vaccWorldAvg, 'World Avg', DATA['World']?.pop);
 }
 
-function updateSyringe(pct, name) {
+function updateSyringe(pct, name, pop) {
   _syringeTarget = Math.max(0, Math.min(100, pct || 0));
   document.getElementById('syringeLabel').textContent = name || 'World Avg';
   document.getElementById('syringePct').textContent = pct != null ? pct.toFixed(1) + '%' : '—';
+  const el = document.getElementById('syringePeople');
+  if (el) {
+    if (pop && pct != null) {
+      const n = (pct / 100) * pop;
+      const s = n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : (n/1e3).toFixed(0)+'K';
+      el.textContent = '≈ ' + s + ' people';
+    } else {
+      el.textContent = '';
+    }
+  }
   if (_syringeRaf) cancelAnimationFrame(_syringeRaf);
   animateSyringe();
 }
@@ -1244,7 +1284,7 @@ function buildVacc() {
   ];
   const pts = countries
     .map(c => { const d = DATA[c]; if (!d) return null;
-                return { c, v: Math.max(...d.data.map(x => x.vp)) }; })
+                return { c, v: Math.max(...d.data.map(x => x.vp)), pop: d.pop || 0 }; })
     .filter(p => p && p.v > 0)
     .sort((a, b) => b.v - a.v);
 
@@ -1302,7 +1342,7 @@ function buildVacc() {
     ctx.canvas.addEventListener('mouseleave', _onVaccLeave);
   }
 
-  updateSyringe(vaccWorldAvg, 'World Avg');
+  updateSyringe(vaccWorldAvg, 'World Avg', DATA['World']?.pop);
 }
 
 /* ═══════════════════════════════════════════════════
