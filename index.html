@@ -48,6 +48,22 @@
       transition: background .25s, color .25s;
     }
 
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(
+        to bottom,
+        #ff0000, #ff6600, #ffcc00, #33cc33,
+        #0099ff, #6633cc, #cc33cc, #ff0066
+      );
+      z-index: 9999;
+      pointer-events: none;
+    }
+    body::before { left: 0; }
+    body::after  { right: 0; }
+
     /* ─── HERO ─── */
     .hero {
       background: linear-gradient(135deg, var(--hero-bg) 0%, var(--hero-mid) 55%, var(--hero-bg) 100%);
