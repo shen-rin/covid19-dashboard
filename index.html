@@ -313,7 +313,7 @@
       flex-shrink: 0;
       width: 180px;
       margin-left: auto;
-      margin-right: 4rem;
+      margin-right: calc(4rem + 2cm);
       padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
@@ -367,7 +367,8 @@
     }
     .syr-mark { stroke: var(--syr-metal); stroke-width: 1.2; }
     .syr-tick { stroke: var(--syr-metal); stroke-width: 0.8; opacity: 0.6; }
-    .syr-mark-lbl { fill: var(--dim); font-size: 6px; font-family: -apple-system, sans-serif; }
+    .syr-mark-lbl { fill: var(--dim); font-size: 6px; font-family: -apple-system, sans-serif;
+      transform: rotate(-35deg); transform-box: fill-box; transform-origin: center; }
     .syr-plunger { fill: var(--syr-plunger); }
     .syr-needle-hub { fill: #b0b8c8; }
     .syr-needle { stroke: #c0c8d8; stroke-width: 1.5; stroke-linecap: round; }
