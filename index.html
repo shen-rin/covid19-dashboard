@@ -265,8 +265,10 @@
       border-radius: 10px; padding: 1.3rem;
       transition: background .25s, border-color .25s;
     }
-    .ic-num  { font-size: 2.6rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: .5rem; }
-    [data-theme="light"] .ic-num { color: #c49000; }
+    .ic-num  { font-size: 2.6rem; font-weight: 900; line-height: 1; margin-bottom: .5rem; }
+    .insight-row .ic:first-child .ic-num { color: var(--cyan); }
+    .insight-row .ic:last-child  .ic-num { color: var(--russia); }
+    [data-theme="light"] .insight-row .ic:first-child .ic-num { color: #0090a8; }
     .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
     .ic-text strong { color: var(--text); }
 
@@ -1049,11 +1051,11 @@ function setMetric(m) {
    REGIONAL
    ═══════════════════════════════════════════════════ */
 const REGIONS_CFG = [
-  { n: 'Africa',        c: '#ab47bc' },
+  { n: 'Africa',        c: '#f368e0' },
   { n: 'Asia',          c: '#ffd32a' },
   { n: 'Europe',        c: '#a46ef0' },
   { n: 'North America', c: '#ff9f43' },
-  { n: 'South America', c: '#1dd1a1' },
+  { n: 'South America', c: '#2ed573' },
   { n: 'Oceania',       c: '#4dd0e1' },
 ];
 
