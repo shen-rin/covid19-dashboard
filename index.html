@@ -183,7 +183,7 @@
     .finding {
       border-left: 3px solid var(--russia);
       background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.02));
-      border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-bottom: 2rem;
+      border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-top: 1.4rem;
     }
     [data-theme="light"] .finding {
       background: linear-gradient(90deg, rgba(255,64,64,.08), rgba(255,64,64,.01));
@@ -193,6 +193,7 @@
       text-transform: uppercase; color: var(--russia); margin-bottom: .3rem;
     }
     .finding p { font-size: .95rem; font-weight: 500; line-height: 1.55; }
+    .finding .finding-sub { font-size: .8rem; font-weight: 400; opacity: .75; margin-top: .4rem; }
     .finding strong { color: var(--russia); }
 
     /* ─── SECTION ─── */
@@ -514,126 +515,20 @@
         <div class="kpi-note">peak · EU avg ~80%</div>
       </div>
     </div>
+
+    <div class="finding">
+      <div class="tag">Main Finding</div>
+      <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
+        <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
+        of its population, nearly <strong>20 points below</strong> the EU average.</p>
+      <p class="finding-sub">Independent demographic estimates put Russia's true excess mortality at
+        <strong>2–3× the official figure</strong>.</p>
+    </div>
   </div>
 </div>
 
 <!-- ═══════════ MAIN ═══════════ -->
 <div class="main">
-
-  <div class="finding">
-    <div class="tag">Main Finding</div>
-    <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
-      <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
-      of its population, nearly <strong>20 points below</strong> the EU average.
-      Independent demographic estimates put Russia's true excess mortality at
-      <strong>2–3× the official figure</strong>.</p>
-  </div>
-
-  <!-- Timeline -->
-  <div class="sec">
-    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
-          <div class="card-sub">Worldwide total · 7-day smoothed</div>
-        </div>
-        <div class="ctrl-row">
-          <div class="btn-grp">
-            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
-            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
-            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
-          </div>
-        </div>
-      </div>
-      <div class="cv" style="height:190px;margin-top:.8rem">
-        <canvas id="cTimeline"></canvas>
-      </div>
-      <div class="units-note">
-        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
-        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
-        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
-      </div>
-
-      <!-- ── Donut row ── -->
-      <div class="donut-section">
-        <div class="donut-ctrl">
-          <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
-          <div class="btn-grp">
-            <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
-            <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
-            <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
-          </div>
-        </div>
-        <div class="donut-row">
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2020"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2020</div>
-                <div class="donut-center-sub" id="ds2020"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2021"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2021</div>
-                <div class="donut-center-sub" id="ds2021"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2022"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2022</div>
-                <div class="donut-center-sub" id="ds2022"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2023"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2023</div>
-                <div class="donut-center-sub" id="ds2023"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="donut-legend" id="donutLegend"></div>
-        <div class="units-note">
-          <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-          <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
-          <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Regional + Europe -->
-  <div class="sec">
-    <div class="sec-lbl">Geographic Perspective</div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Cases by Region</div>
-          <div class="card-sub">Cumulative totals, millions</div>
-        </div>
-      </div>
-      <div class="cv" style="height:380px">
-        <canvas id="cRegional"></canvas>
-      </div>
-      <div class="units-note">
-        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
-        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
-      </div>
-    </div>
-  </div>
 
   <!-- Vaccination -->
   <div class="sec">
@@ -751,6 +646,27 @@
     </div>
   </div>
 
+  <!-- Regional + Europe -->
+  <div class="sec">
+    <div class="sec-lbl">Geographic Perspective</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Cases by Region</div>
+          <div class="card-sub">Cumulative totals, millions</div>
+        </div>
+      </div>
+      <div class="cv" style="height:380px">
+        <canvas id="cRegional"></canvas>
+      </div>
+      <div class="units-note">
+        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
+        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
+      </div>
+    </div>
+  </div>
+
   <!-- Insight cards -->
   <div class="insight-row">
     <div class="ic">
@@ -771,6 +687,91 @@
         hesitancy left a large share of the population exposed during the deadliest waves,
         contributing to Europe's highest official COVID death toll.
       </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="sec">
+    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
+          <div class="card-sub">Worldwide total · 7-day smoothed</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-grp">
+            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
+            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
+            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+      </div>
+      <div class="cv" style="height:190px;margin-top:.8rem">
+        <canvas id="cTimeline"></canvas>
+      </div>
+      <div class="units-note">
+        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
+        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
+        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
+      </div>
+
+      <!-- ── Donut row ── -->
+      <div class="donut-section">
+        <div class="donut-ctrl">
+          <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
+          <div class="btn-grp">
+            <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
+            <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
+            <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+        <div class="donut-row">
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2020"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2020</div>
+                <div class="donut-center-sub" id="ds2020"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2021"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2021</div>
+                <div class="donut-center-sub" id="ds2021"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2022"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2022</div>
+                <div class="donut-center-sub" id="ds2022"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2023"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2023</div>
+                <div class="donut-center-sub" id="ds2023"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+        <div class="units-note">
+          <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+          <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
+          <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
+        </div>
+      </div>
+
     </div>
   </div>
 
