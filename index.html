@@ -273,11 +273,7 @@
     .ic-text strong { color: var(--text); }
 
     /* ─── DONUTS ─── */
-    .donut-section {
-      margin-top: 1.5rem;
-      padding-top: 1.4rem;
-      border-top: 1px solid var(--border);
-    }
+    .donut-section { }
     .donut-ctrl {
       display: flex; align-items: center;
       justify-content: space-between; gap: 1rem;
@@ -517,8 +513,8 @@
       .kpi-val  { font-size: 1.5rem; }
       .finding { padding: 0.8rem 1rem; }
       .card-head { flex-direction: column; gap: 0.6rem; }
-      .syringe-wrap { display: none; }
       .syringe-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2rem; }
+      .syringe-wrap  { width: 60px; flex: none; }
       .vacc-chart-area { height: 300px; }
       .donut-row { grid-template-columns: repeat(2, 1fr); }
       .insight-row { grid-template-columns: 1fr; }
@@ -723,38 +719,8 @@
     </div>
   </div>
 
-  <!-- Regional + Europe -->
-  <div class="sec">
-    <div class="sec-lbl">Geographic Perspective</div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Cases by Region</div>
-          <div class="card-sub">Cumulative totals, millions</div>
-        </div>
-      </div>
-      <div class="cv" style="height:380px">
-        <canvas id="cRegional"></canvas>
-      </div>
-      <div class="units-note">
-        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
-        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
-      </div>
-    </div>
-  </div>
-
-  <!-- Insight cards -->
-  <div class="insight-row">
-    <div class="ic">
-      <div class="ic-num">Omicron Peak</div>
-      <div class="ic-text">
-        In January 2022 the <strong>Omicron variant</strong> pushed weekly global cases to an
-        all-time peak of <strong>6.3 million</strong>. Despite the scale of the wave, deaths
-        rose far more slowly — vaccines and prior infection had already blunted the virus's
-        lethality in most of the world.
-      </div>
-    </div>
+  <!-- Insight card — Russia vs EU (directly under vaccination) -->
+  <div class="insight-row" style="grid-template-columns:1fr;margin-top:-1rem">
     <div class="ic">
       <div class="ic-num">Russia vs EU</div>
       <div class="ic-text">
@@ -767,36 +733,13 @@
     </div>
   </div>
 
-  <!-- Timeline -->
+  <!-- Annual Distribution Donuts -->
   <div class="sec">
-    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
+    <div class="sec-lbl">Annual Distribution by Region</div>
     <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
-          <div class="card-sub">Worldwide total · 7-day smoothed</div>
-        </div>
-        <div class="ctrl-row">
-          <div class="btn-grp">
-            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
-            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
-            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
-          </div>
-        </div>
-      </div>
-      <div class="cv" style="height:190px;margin-top:.8rem">
-        <canvas id="cTimeline"></canvas>
-      </div>
-      <div class="units-note">
-        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
-        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
-        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
-      </div>
-
-      <!-- ── Donut row ── -->
       <div class="donut-section">
         <div class="donut-ctrl">
-          <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
+          <span class="donut-ctrl-lbl">Breakdown by year — select metric</span>
           <div class="btn-grp">
             <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
             <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
@@ -847,6 +790,68 @@
           <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
           <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regional + Europe -->
+  <div class="sec">
+    <div class="sec-lbl">Geographic Perspective</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Cases by Region</div>
+          <div class="card-sub">Cumulative totals, millions</div>
+        </div>
+      </div>
+      <div class="cv" style="height:380px">
+        <canvas id="cRegional"></canvas>
+      </div>
+      <div class="units-note">
+        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
+        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight card — Omicron -->
+  <div class="insight-row" style="grid-template-columns:1fr">
+    <div class="ic">
+      <div class="ic-num">Omicron Peak</div>
+      <div class="ic-text">
+        In January 2022 the <strong>Omicron variant</strong> pushed weekly global cases to an
+        all-time peak of <strong>6.3 million</strong>. Despite the scale of the wave, deaths
+        rose far more slowly — vaccines and prior infection had already blunted the virus's
+        lethality in most of the world.
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="sec">
+    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
+          <div class="card-sub">Worldwide total · 7-day smoothed</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-grp">
+            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
+            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
+            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+      </div>
+      <div class="cv" style="height:190px;margin-top:.8rem">
+        <canvas id="cTimeline"></canvas>
+      </div>
+      <div class="units-note">
+        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
+        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
+        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
       </div>
 
     </div>
