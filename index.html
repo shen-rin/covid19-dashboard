@@ -339,7 +339,7 @@
       flex-shrink: 0;
       width: 180px;
       margin-left: auto;
-      margin-right: calc(4rem + 2cm);
+      margin-right: 5rem;
       padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
@@ -373,7 +373,7 @@
       transform-origin: center center;
     }
     .vacc-chart-area {
-      flex: 0 0 calc(460px + 4cm);
+      flex: 0 0 620px;
       height: 520px;
       margin-top: 90px;
     }
@@ -458,6 +458,81 @@
     }
     [data-theme="light"] .corona-deco {
       color: #007a99;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════ */
+
+    /* ── Wide screens (>1400px): content already capped at 1160px, just ensure
+          the hero padding doesn't look too compressed at the sides ── */
+    @media (min-width: 1400px) {
+      .hero { padding-left: 3rem; padding-right: 3rem; }
+    }
+
+    /* ── Narrow desktop / large tablet (≤1200px) ── */
+    @media (max-width: 1200px) {
+      .corona-deco { right: 8rem; width: 110px; height: 110px; }
+      .syringe-panel { margin-right: 2rem; }
+      .vacc-chart-area { flex: 1 1 auto; height: 460px; }
+    }
+
+    /* ── Tablet (≤900px) ── */
+    @media (max-width: 900px) {
+      body { padding-left: 32px; padding-right: 32px; }
+      .corona-deco { display: none; }
+      .vacc-layout { flex-wrap: wrap; }
+      .vacc-chart-area {
+        flex: 1 1 100%;
+        height: 380px;
+        margin-top: 0;
+      }
+      .syringe-panel {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 1rem 0.5rem;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+      .syringe-country { min-height: unset; margin-bottom: 0; }
+      .syringe-pct     { margin-bottom: 0; min-height: unset; }
+      .syringe-wrap    { width: 70px; flex: none; }
+    }
+
+    /* ── Mobile (≤600px) ── */
+    @media (max-width: 600px) {
+      body { padding-left: 16px; padding-right: 16px; }
+      html::before, html::after { width: 28px; }
+      body::before { left: 4px; }
+      body::after  { right: 4px; }
+      .hero { padding: 1.2rem 0.8rem 1.2rem; }
+      .main { padding: 1rem 0.5rem; }
+      .card { padding: 1rem; }
+      .hero h1 { font-size: clamp(1.3rem, 6vw, 1.9rem); }
+      .hero-sub { margin-bottom: 1.2rem; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .kpi-val  { font-size: 1.5rem; }
+      .finding { padding: 0.8rem 1rem; }
+      .card-head { flex-direction: column; gap: 0.6rem; }
+      .syringe-wrap { display: none; }
+      .syringe-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2rem; }
+      .vacc-chart-area { height: 300px; }
+      .donut-row { grid-template-columns: repeat(2, 1fr); }
+      .insight-row { grid-template-columns: 1fr; }
+      .ic-num { font-size: 1.8rem; }
+      .sources-list li { flex-direction: column; gap: 0.1rem; }
+      .sources-list li::before { display: none; }
+    }
+
+    /* ── Small mobile (≤380px) ── */
+    @media (max-width: 380px) {
+      body { padding-left: 10px; padding-right: 10px; }
+      .kpi-row { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.3rem; }
+      .kpi-val  { font-size: 1.3rem; }
     }
   </style>
 </head>
