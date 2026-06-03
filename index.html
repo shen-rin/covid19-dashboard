@@ -1093,29 +1093,28 @@ const EVENT_MARKERS = {
       const xPos = x.getPixelForValue(idx);
       if (xPos < chartArea.left || xPos > chartArea.right) return;
 
-      /* Vertical dashed line */
       ctx.save();
-      ctx.beginPath();
-      ctx.setLineDash([3, 3]);
-      ctx.moveTo(xPos, chartArea.top);
-      ctx.lineTo(xPos, chartArea.bottom);
-      ctx.strokeStyle = evt.color + '66';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.setLineDash([]);
 
-      /* Dot at top edge */
-      const dotY = chartArea.top + 5 + evt.row * 14;
+      /* Dot and label ABOVE the chart area */
+      const dotY = chartArea.top - 28 + evt.row * 16;
       ctx.beginPath();
       ctx.arc(xPos, dotY, 3.5, 0, Math.PI * 2);
       ctx.fillStyle = evt.color;
       ctx.fill();
 
+      /* Vertical line from dot down to chart bottom */
+      ctx.beginPath();
+      ctx.moveTo(xPos, dotY + 4);
+      ctx.lineTo(xPos, chartArea.bottom);
+      ctx.strokeStyle = evt.color + '55';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       /* Label to the right of dot */
       ctx.font = '600 8.5px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
       ctx.fillStyle = evt.color;
       ctx.textAlign = 'left';
-      ctx.fillText(evt.label, xPos + 6, dotY + 3);
+      ctx.fillText(evt.label, xPos + 6, dotY + 3.5);
       ctx.restore();
     });
   }
@@ -1134,6 +1133,7 @@ function buildTimeline() {
     plugins: [YEAR_LINES, EVENT_MARKERS],
     options: {
       responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 42 } },
       interaction: { intersect: false, mode: 'index' },
       plugins: {
         legend: { display: false },
