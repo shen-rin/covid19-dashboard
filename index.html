@@ -803,12 +803,12 @@
 
   <!-- Regional + Europe -->
   <div class="sec">
-    <div class="sec-lbl">Geographic Perspective</div>
+    <div class="sec-lbl">European Countries — Cases &amp; COVID Deaths</div>
     <div class="card">
       <div class="card-head">
         <div>
-          <div class="card-title">Cases by Region</div>
-          <div class="card-sub">Cumulative totals, millions</div>
+          <div class="card-title">Europe: Cases &amp; Deaths by Country</div>
+          <div class="card-sub">Cumulative totals · Russia highlighted in red</div>
         </div>
       </div>
       <div class="cv" style="height:380px">
@@ -816,8 +816,9 @@
       </div>
       <div class="units-note">
         <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
-        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
+        <b>Cases (left axis, blue)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
+        <b>COVID Deaths (right axis, red)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands &nbsp;·&nbsp;
+        <b>Russia</b> — bold red border on both bars.
       </div>
     </div>
   </div>
@@ -1147,6 +1148,7 @@ function setMetric(m) {
 /* ═══════════════════════════════════════════════════
    REGIONAL
    ═══════════════════════════════════════════════════ */
+/* REGIONS_CFG used by donut charts only */
 const REGIONS_CFG = [
   { n: 'Africa',        c: '#f368e0' },
   { n: 'Asia',          c: '#ffd32a' },
@@ -1156,10 +1158,19 @@ const REGIONS_CFG = [
   { n: 'Oceania',       c: '#4dd0e1' },
 ];
 
+/* European countries for the bar chart */
+const EUROPE_CFG = [
+  'France','Germany','Italy','Poland','Russia',
+  'Spain','Turkey','Ukraine','United Kingdom'
+];
+
 function buildRegional() {
-  const tc   = themeColors();
-  const BASE = isDark ? '#4dd0e1' : '#0090a8';
+  const tc  = themeColors();
+  const BLUE = '#3d9cf5';
+  const DRED = '#ff7070';
   hoveredRegionIdx = -1;
+
+  const isRussia = n => n === 'Russia';
 
   const ctx = document.getElementById('cRegional').getContext('2d');
   if (charts.regional) charts.regional.destroy();
@@ -1193,26 +1204,24 @@ function buildRegional() {
     type: 'bar',
     plugins: [barLabelsPlugin],
     data: {
-      labels: REGIONS_CFG.map(r => r.n),
+      labels: EUROPE_CFG.map(n => n === 'United Kingdom' ? 'UK' : n),
       datasets: [
         {
           label: 'Cases (M)',
-          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.tc || 0) / 1e6),
-          backgroundColor:      REGIONS_CFG.map(() => BASE + '44'),
-          borderColor:          REGIONS_CFG.map(() => BASE),
-          hoverBackgroundColor: REGIONS_CFG.map(r => r.c + 'cc'),
-          hoverBorderColor:     REGIONS_CFG.map(r => r.c),
-          borderWidth: 1.5,
+          data:            EUROPE_CFG.map(n => (DATA[n]?.tc || 0) / 1e6),
+          backgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404022' : BLUE + '44'),
+          borderColor:     EUROPE_CFG.map(n => isRussia(n) ? '#ff4040'   : BLUE),
+          borderWidth:     EUROPE_CFG.map(n => isRussia(n) ? 3 : 1.5),
+          hoverBackgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404055' : BLUE + 'aa'),
           yAxisID: 'yC'
         },
         {
           label: 'COVID Deaths (K)',
-          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.td || 0) / 1e3),
-          backgroundColor:      '#ff404044',
-          borderColor:          '#ff4040',
-          hoverBackgroundColor: '#ff4040bb',
-          hoverBorderColor:     '#ff4040',
-          borderWidth: 1.5,
+          data:            EUROPE_CFG.map(n => (DATA[n]?.td || 0) / 1e3),
+          backgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404044' : DRED + '44'),
+          borderColor:     EUROPE_CFG.map(n => isRussia(n) ? '#ff4040'   : DRED),
+          borderWidth:     EUROPE_CFG.map(n => isRussia(n) ? 3 : 1.5),
+          hoverBackgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff4040bb' : DRED + 'aa'),
           yAxisID: 'yD'
         }
       ]
@@ -1235,12 +1244,14 @@ function buildRegional() {
           grid:   { color: tc.grid },
           border: { color: tc.border },
           ticks: {
-            color: c => hoveredRegionIdx === c.index
-              ? (REGIONS_CFG[c.index]?.c || tc.tick)
-              : tc.tick,
+            color: c => {
+              if (EUROPE_CFG[c.index] === 'Russia') return '#ff4040';
+              if (hoveredRegionIdx === c.index) return BLUE;
+              return tc.tick;
+            },
             font: c => ({
               size:   11,
-              weight: hoveredRegionIdx === c.index ? '700' : '400',
+              weight: (EUROPE_CFG[c.index] === 'Russia' || hoveredRegionIdx === c.index) ? '700' : '400',
             }),
           }
         },
@@ -1248,13 +1259,13 @@ function buildRegional() {
           type: 'linear', position: 'left',
           grid:   { color: tc.grid },
           border: { color: tc.border },
-          ticks:  { color: isDark ? '#4dd0e1' : '#0090a8', callback: v => v + 'M' }
+          ticks:  { color: BLUE, callback: v => v + 'M' }
         },
         yD: {
           type: 'linear', position: 'right',
           grid:   { drawOnChartArea: false },
           border: { color: tc.border },
-          ticks:  { color: '#ff7070', callback: v => v + 'K' }
+          ticks:  { color: DRED, callback: v => v + 'K' }
         }
       }
     }
