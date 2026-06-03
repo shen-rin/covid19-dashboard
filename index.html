@@ -1017,7 +1017,7 @@ function makeDatasets() {
   const vals   = entry.data.map(d =>
     metric === 'cases' ? d.nc : metric === 'deaths' ? d.nd : d.vp
   );
-  const color = isVacc ? '#2ed573' : '#4dd0e1';
+  const color = metric === 'vacc' ? '#2ed573' : metric === 'deaths' ? '#ff7070' : '#3d9cf5';
   const datasets = [{
     label:           isVacc ? 'Vaccinated (%)' : 'World',
     data:            vals,
