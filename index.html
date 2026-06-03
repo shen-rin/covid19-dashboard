@@ -157,7 +157,7 @@
       border-radius: 9px; padding: 1.1rem 1.3rem;
       transition: background .25s, border-color .25s;
     }
-    .kpi.accent {
+    .kpi.accent, .kpi.vacc {
       border-color: var(--russia);
     }
     .kpi-lbl {
@@ -271,9 +271,11 @@
       transition: background .25s, border-color .25s;
     }
     .ic-num  { font-size: 2.6rem; font-weight: 900; line-height: 1; margin-bottom: .5rem; }
-    .insight-row .ic:first-child .ic-num { color: var(--cyan); }
-    .insight-row .ic:last-child  .ic-num { color: var(--russia); }
-    [data-theme="light"] .insight-row .ic:first-child .ic-num { color: #0090a8; }
+    .ic.cyan   .ic-num { color: var(--cyan); }
+    .ic.blue   .ic-num { color: var(--blue); }
+    .ic.russia .ic-num { color: var(--russia); }
+    [data-theme="light"] .ic.cyan .ic-num { color: #0090a8; }
+    [data-theme="light"] .ic.blue .ic-num { color: #1a6abf; }
     .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
     .ic-text strong { color: var(--text); }
 
@@ -726,7 +728,7 @@
 
   <!-- Insight card — Russia vs EU (directly under vaccination) -->
   <div class="insight-row" style="grid-template-columns:1fr;margin-top:-1rem">
-    <div class="ic">
+    <div class="ic russia">
       <div class="ic-num">Russia vs EU</div>
       <div class="ic-text">
         Russia's vaccination coverage peaked at <strong>61%</strong> — roughly
@@ -820,15 +822,25 @@
     </div>
   </div>
 
-  <!-- Insight card — Omicron -->
-  <div class="insight-row" style="grid-template-columns:1fr">
-    <div class="ic">
+  <!-- Insight cards — Omicron + China Reopening -->
+  <div class="insight-row">
+    <div class="ic cyan">
       <div class="ic-num">Omicron Peak</div>
       <div class="ic-text">
         In January 2022 the <strong>Omicron variant</strong> pushed weekly global cases to an
         all-time peak of <strong>6.3 million</strong>. Despite the scale of the wave, deaths
         rose far more slowly — vaccines and prior infection had already blunted the virus's
         lethality in most of the world.
+      </div>
+    </div>
+    <div class="ic blue">
+      <div class="ic-num">Dec 2022 Wave</div>
+      <div class="ic-text">
+        In December 2022 China abruptly ended its Zero-COVID policy, triggering an estimated
+        <strong>1 billion infections</strong> within weeks — the largest single-country
+        outbreak of the pandemic. Simultaneously, the <strong>XBB subvariant</strong> drove
+        renewed waves across Europe and North America, though global mortality remained
+        far below earlier peaks thanks to widespread immunity and updated vaccines.
       </div>
     </div>
   </div>
