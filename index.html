@@ -168,29 +168,28 @@
       font-size: 2rem; font-weight: 800; line-height: 1;
       font-variant-numeric: tabular-nums;
     }
-    .kpi .kpi-val      { color: var(--cyan); }
+    .kpi .kpi-val        { color: var(--blue); }
     .kpi.deaths .kpi-val { color: #ff7070; }
     .kpi.accent .kpi-val { color: var(--russia); }
-    [data-theme="light"] .kpi .kpi-val      { color: #0090a8; }
+    .kpi.vacc   .kpi-val { color: var(--green); }
+    [data-theme="light"] .kpi .kpi-val        { color: #1a6abf; }
     [data-theme="light"] .kpi.deaths .kpi-val { color: #cc2222; }
     [data-theme="light"] .kpi.accent .kpi-val { color: var(--russia); }
+    [data-theme="light"] .kpi.vacc   .kpi-val { color: #1a8c45; }
     .kpi-note { font-size: .72rem; color: var(--dim); margin-top: .35rem; }
 
     /* ─── MAIN ─── */
     .main { max-width: 1160px; margin: 0 auto; padding: 1.8rem 2rem; }
 
-    /* ─── FINDING BANNER ─── */
+    /* ─── FINDING BANNER — styled like a KPI card ─── */
     .finding {
-      border-left: 3px solid var(--russia);
-      background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.02));
-      border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-top: 1.4rem;
-    }
-    [data-theme="light"] .finding {
-      background: linear-gradient(90deg, rgba(255,64,64,.08), rgba(255,64,64,.01));
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 9px; padding: 1.1rem 1.3rem; margin-bottom: 1rem;
+      transition: background .25s, border-color .25s;
     }
     .finding .tag {
-      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--russia); margin-bottom: .3rem;
+      font-size: .62rem; font-weight: 700; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: .45rem;
     }
     .finding p { font-size: .95rem; font-weight: 500; line-height: 1.55; }
     .finding .finding-sub { font-size: .8rem; font-weight: 400; opacity: .75; margin-top: .4rem; }
@@ -233,6 +232,12 @@
     .btn-grp button:last-child { border-right: none; }
     .btn-grp button.on { background: var(--cyan); color: #000; }
     [data-theme="light"] .btn-grp button.on { background: #0090a8; color: #fff; }
+    #bCases.on,  #dCases.on  { background: var(--blue);   color: #fff; }
+    #bDeaths.on, #dDeaths.on { background: #ff7070;        color: #fff; }
+    #bVacc.on,   #dVacc.on   { background: var(--green);   color: #000; }
+    [data-theme="light"] #bCases.on,  [data-theme="light"] #dCases.on  { background: #1a6abf; color: #fff; }
+    [data-theme="light"] #bDeaths.on, [data-theme="light"] #dDeaths.on { background: #cc2222; color: #fff; }
+    [data-theme="light"] #bVacc.on,   [data-theme="light"] #dVacc.on   { background: #1a8c45; color: #fff; }
     .btn-grp button:hover:not(.on) { background: var(--surf2); color: var(--text); }
 
     /* ─── CHIPS ─── */
@@ -566,8 +571,17 @@
         <em>Not in Vaccines</em></h1>
     <p class="hero-sub">WHO / Our World in Data · 40 countries · 4+ years · ~430 000 data points</p>
 
+    <div class="finding">
+      <div class="tag">Main Finding</div>
+      <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
+        <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
+        of its population, nearly <strong>20 points below</strong> the EU average.</p>
+      <p class="finding-sub">Independent demographic estimates put Russia's true excess mortality at
+        <strong>2–3× the official figure</strong>.</p>
+    </div>
+
     <div class="kpi-row">
-      <div class="kpi">
+      <div class="kpi cases">
         <div class="kpi-lbl">Global Cases Reported</div>
         <div class="kpi-val" id="kGC">—</div>
         <div class="kpi-note">cumulative, as of Aug 2024</div>
@@ -582,20 +596,11 @@
         <div class="kpi-val" id="kRD">—</div>
         <div class="kpi-note" id="kRShare">— of Europe's toll</div>
       </div>
-      <div class="kpi">
+      <div class="kpi vacc">
         <div class="kpi-lbl">Russia Vaccination %</div>
         <div class="kpi-val" id="kRV">—</div>
         <div class="kpi-note">peak · EU avg ~80%</div>
       </div>
-    </div>
-
-    <div class="finding">
-      <div class="tag">Main Finding</div>
-      <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
-        <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
-        of its population, nearly <strong>20 points below</strong> the EU average.</p>
-      <p class="finding-sub">Independent demographic estimates put Russia's true excess mortality at
-        <strong>2–3× the official figure</strong>.</p>
     </div>
   </div>
 </div>
