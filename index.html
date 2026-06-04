@@ -870,25 +870,15 @@
     </div>
   </div>
 
-  <!-- Insight cards — Omicron + China Reopening -->
-  <div class="insight-row">
-    <div class="ic cyan">
+  <!-- Insight card — Omicron -->
+  <div class="insight-row" style="grid-template-columns:1fr">
+    <div class="ic blue">
       <div class="ic-num">Omicron Peak</div>
       <div class="ic-text">
         In January 2022 the <strong>Omicron variant</strong> pushed weekly global cases to an
         all-time peak of <strong>6.3 million</strong>. Despite the scale of the wave, deaths
         rose far more slowly — vaccines and prior infection had already blunted the virus's
         lethality in most of the world.
-      </div>
-    </div>
-    <div class="ic blue">
-      <div class="ic-num">Dec 2022 Wave</div>
-      <div class="ic-text">
-        In December 2022 China abruptly ended its Zero-COVID policy, triggering an estimated
-        <strong>1 billion infections</strong> within weeks — the largest single-country
-        outbreak of the pandemic. Simultaneously, the <strong>XBB subvariant</strong> drove
-        renewed waves across Europe and North America, though global mortality remained
-        far below earlier peaks thanks to widespread immunity and updated vaccines.
       </div>
     </div>
   </div>
@@ -920,6 +910,20 @@
         <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
       </div>
 
+    </div>
+  </div>
+
+  <!-- Insight card — Dec 2022 Wave (placed under timeline) -->
+  <div class="insight-row" style="grid-template-columns:1fr">
+    <div class="ic blue">
+      <div class="ic-num">Dec 2022 Wave</div>
+      <div class="ic-text">
+        In December 2022 China abruptly ended its Zero-COVID policy, triggering an estimated
+        <strong>1 billion infections</strong> within weeks — the largest single-country
+        outbreak of the pandemic. Simultaneously, the <strong>XBB subvariant</strong> drove
+        renewed waves across Europe and North America, though global mortality remained
+        far below earlier peaks thanks to widespread immunity and updated vaccines.
+      </div>
     </div>
   </div>
 
@@ -1192,7 +1196,7 @@ function _startPlay() {
 
   function frame() {
     if (!_playIsPlaying) return;
-    _playFrame = Math.min(_playFrame + 4, total);
+    _playFrame = Math.min(_playFrame + 1, total);
 
     const clipped = datasets.map(ds => ({
       ...ds, data: ds.data.map((v, i) => i <= _playFrame ? v : null)
@@ -1201,22 +1205,18 @@ function _startPlay() {
     charts.timeline.update('none');
 
     if (_playFrame < total) {
-      const atEvent = eventIdxs.some(ei => Math.abs(ei - _playFrame) < 3);
-      if (atEvent) {
-        setTimeout(() => { _playRafId = requestAnimationFrame(frame); }, 350);
-      } else {
-        _playRafId = requestAnimationFrame(frame);
-      }
+      const atEvent = eventIdxs.some(ei => Math.abs(ei - _playFrame) < 2);
+      _playRafId = setTimeout(frame, atEvent ? 600 : 40);
     } else {
       _stopPlay(true);
     }
   }
-  _playRafId = requestAnimationFrame(frame);
+  _playRafId = setTimeout(frame, 40);
 }
 
 function _stopPlay(finished = false) {
   _playIsPlaying = false;
-  if (_playRafId) { cancelAnimationFrame(_playRafId); _playRafId = null; }
+  if (_playRafId) { clearTimeout(_playRafId); _playRafId = null; }
   const btn = document.getElementById('playBtn');
   if (btn) { btn.textContent = finished ? '↺ Replay' : '▶ Play'; btn.classList.remove('playing'); }
   buildTimeline();
@@ -1224,7 +1224,9 @@ function _stopPlay(finished = false) {
 }
 
 /* ── Feature 4: Timeline → regional chart crosshair linkage ── */
-function updateRegionalToDate(dateStr) {
+let _regionalLockedDate = null;
+
+function updateRegionalToDate(dateStr, locked) {
   if (!charts.regional) return;
   const c = charts.regional;
   c.data.datasets[0].data = EUROPE_CFG.map(n => {
@@ -1247,7 +1249,25 @@ function updateRegionalToDate(dateStr) {
   const sub = document.getElementById('regionalSub');
   if (sub) {
     const d = new Date(dateStr);
-    sub.textContent = 'as of ' + d.toLocaleDateString('en', { month: 'long', year: 'numeric' }) + ' · hover timeline to scrub';
+    const dateLabel = d.toLocaleDateString('en', { month: 'long', year: 'numeric' });
+    sub.textContent = locked
+      ? '📌 Locked to ' + dateLabel + ' · click again to unlock'
+      : 'as of ' + dateLabel + ' · click to lock date';
+  }
+}
+
+function _onTimelineClick(e) {
+  if (!charts.timeline) return;
+  const els = charts.timeline.getElementsAtEventForMode(e, 'index', { intersect: false }, false);
+  if (!els.length) return;
+  const lbl = charts.timeline.data.labels?.[els[0].index];
+  if (!lbl) return;
+  if (_regionalLockedDate === lbl) {
+    _regionalLockedDate = null;
+    _resetRegional();
+  } else {
+    _regionalLockedDate = lbl;
+    updateRegionalToDate(lbl, true);
   }
 }
 
@@ -1255,7 +1275,7 @@ function _resetRegional() {
   if (!charts.regional) return;
   buildRegional();
   const sub = document.getElementById('regionalSub');
-  if (sub) sub.textContent = 'Cumulative totals · hover timeline to scrub by date';
+  if (sub) sub.textContent = 'Cumulative totals · hover timeline to scrub · click to lock';
 }
 
 function buildTimeline() {
@@ -1274,9 +1294,9 @@ function buildTimeline() {
       layout: { padding: { top: 42 } },
       interaction: { intersect: false, mode: 'index' },
       onHover: (_e, elements) => {
-        if (!elements.length) return;
+        if (_regionalLockedDate || !elements.length) return;
         const lbl = charts.timeline?.data?.labels?.[elements[0].index];
-        if (lbl) updateRegionalToDate(lbl);
+        if (lbl) updateRegionalToDate(lbl, false);
       },
       plugins: {
         legend: { display: false },
@@ -1324,7 +1344,8 @@ function buildTimeline() {
     }
   });
 
-  ctx.canvas.onmouseleave = _resetRegional;
+  ctx.canvas.onmouseleave = () => { if (!_regionalLockedDate) _resetRegional(); };
+  ctx.canvas.onclick = _onTimelineClick;
 }
 
 function rebuildTimeline() {
