@@ -347,14 +347,11 @@
       padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
-    /* Text info floats at top of panel, independent of syringe position */
+    /* Text info block — always at top of panel, stable position */
     .syringe-info {
-      position: absolute;
-      top: 0.5rem;
-      left: 0; right: 0;
-      z-index: 2;
+      width: 100%;
       text-align: center;
-      pointer-events: none;
+      flex-shrink: 0;
     }
     .syringe-country {
       font-size: 14px;
@@ -380,7 +377,6 @@
       background: rgba(255,211,42,0.12); border: 1px solid #ffd32a55;
       border-radius: 6px; padding: 4px 8px; margin: 0 0.5rem 4px;
       line-height: 1.5; color: var(--text);
-      pointer-events: auto;
     }
     .syringe-compare.active { display: block; }
     .sc-delta { font-weight: 700; }
@@ -521,7 +517,7 @@
 
     /* ── Narrow desktop / large tablet (≤1200px) ── */
     @media (max-width: 1200px) {
-      .corona-deco { right: 8rem; width: 110px; height: 110px; }
+      .corona-deco { right: 8rem; top: 4rem; width: 100px; height: 100px; }
       .syringe-panel { margin-right: 2rem; }
       .vacc-chart-area { flex: 1 1 auto; height: 460px; }
     }
@@ -530,6 +526,7 @@
     @media (max-width: 900px) {
       body { padding-left: 32px; padding-right: 32px; }
       .corona-deco { display: none; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
       .vacc-layout { flex-wrap: wrap; }
       .vacc-chart-area {
         flex: 1 1 100%;
@@ -546,9 +543,10 @@
         gap: 1.5rem;
         justify-content: center;
       }
-      .syringe-country { min-height: unset; margin-bottom: 0; }
-      .syringe-pct     { margin-bottom: 0; min-height: unset; }
-      .syringe-wrap    { width: 70px; flex: none; }
+      .syringe-country { margin-bottom: 0; }
+      .syringe-pct     { margin-bottom: 0; }
+      .syringe-info    { width: auto; flex-shrink: 1; text-align: left; }
+      .syringe-wrap    { width: 70px; flex: none; margin-top: 0; }
     }
 
     /* ── Mobile (≤600px) ── */
@@ -562,12 +560,14 @@
       .card { padding: 1rem; }
       .hero h1 { font-size: clamp(1.3rem, 6vw, 1.9rem); }
       .hero-sub { margin-bottom: 1.2rem; }
+      .badge { font-size: .58rem; letter-spacing: .06em; padding: .25rem .5rem; }
       .kpi-row { grid-template-columns: 1fr 1fr; }
       .kpi-val  { font-size: 1.5rem; }
       .finding { padding: 0.8rem 1rem; }
       .card-head { flex-direction: column; gap: 0.6rem; }
       .syringe-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2rem; }
-      .syringe-wrap  { width: 60px; flex: none; }
+      .syringe-info  { width: auto; flex-shrink: 1; text-align: left; }
+      .syringe-wrap  { width: 60px; flex: none; margin-top: 0; }
       .vacc-chart-area { height: 300px; }
       .donut-row { grid-template-columns: repeat(2, 1fr); }
       .insight-row { grid-template-columns: 1fr; }
