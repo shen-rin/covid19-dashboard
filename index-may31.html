@@ -157,7 +157,7 @@
       border-radius: 9px; padding: 1.1rem 1.3rem;
       transition: background .25s, border-color .25s;
     }
-    .kpi.accent, .kpi.vacc {
+    .kpi.accent {
       border-color: var(--russia);
     }
     .kpi-lbl {
@@ -168,31 +168,31 @@
       font-size: 2rem; font-weight: 800; line-height: 1;
       font-variant-numeric: tabular-nums;
     }
-    .kpi .kpi-val        { color: var(--blue); }
+    .kpi .kpi-val      { color: var(--cyan); }
     .kpi.deaths .kpi-val { color: #ff7070; }
     .kpi.accent .kpi-val { color: var(--russia); }
-    .kpi.vacc   .kpi-val { color: var(--green); }
-    [data-theme="light"] .kpi .kpi-val        { color: #1a6abf; }
+    [data-theme="light"] .kpi .kpi-val      { color: #0090a8; }
     [data-theme="light"] .kpi.deaths .kpi-val { color: #cc2222; }
     [data-theme="light"] .kpi.accent .kpi-val { color: var(--russia); }
-    [data-theme="light"] .kpi.vacc   .kpi-val { color: #1a8c45; }
     .kpi-note { font-size: .72rem; color: var(--dim); margin-top: .35rem; }
 
     /* ─── MAIN ─── */
     .main { max-width: 1160px; margin: 0 auto; padding: 1.8rem 2rem; }
 
-    /* ─── FINDING BANNER — styled like a KPI card ─── */
+    /* ─── FINDING BANNER ─── */
     .finding {
-      background: var(--surf2); border: 1px solid var(--border);
-      border-radius: 9px; padding: 1.1rem 1.3rem; margin-bottom: 1rem;
-      transition: background .25s, border-color .25s;
+      border-left: 3px solid var(--russia);
+      background: linear-gradient(90deg, rgba(255,64,64,.1), rgba(255,64,64,.02));
+      border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin-bottom: 2rem;
+    }
+    [data-theme="light"] .finding {
+      background: linear-gradient(90deg, rgba(255,64,64,.08), rgba(255,64,64,.01));
     }
     .finding .tag {
-      font-size: .62rem; font-weight: 700; letter-spacing: .09em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: .45rem;
+      font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--russia); margin-bottom: .3rem;
     }
     .finding p { font-size: .95rem; font-weight: 500; line-height: 1.55; }
-    .finding .finding-sub { font-size: .8rem; font-weight: 400; opacity: .75; margin-top: .4rem; }
     .finding strong { color: var(--russia); }
 
     /* ─── SECTION ─── */
@@ -232,12 +232,6 @@
     .btn-grp button:last-child { border-right: none; }
     .btn-grp button.on { background: var(--cyan); color: #000; }
     [data-theme="light"] .btn-grp button.on { background: #0090a8; color: #fff; }
-    #bCases.on,  #dCases.on  { background: var(--blue);   color: #fff; }
-    #bDeaths.on, #dDeaths.on { background: #ff7070;        color: #fff; }
-    #bVacc.on,   #dVacc.on   { background: var(--green);   color: #000; }
-    [data-theme="light"] #bCases.on,  [data-theme="light"] #dCases.on  { background: #1a6abf; color: #fff; }
-    [data-theme="light"] #bDeaths.on, [data-theme="light"] #dDeaths.on { background: #cc2222; color: #fff; }
-    [data-theme="light"] #bVacc.on,   [data-theme="light"] #dVacc.on   { background: #1a8c45; color: #fff; }
     .btn-grp button:hover:not(.on) { background: var(--surf2); color: var(--text); }
 
     /* ─── CHIPS ─── */
@@ -270,17 +264,17 @@
       border-radius: 10px; padding: 1.3rem;
       transition: background .25s, border-color .25s;
     }
-    .ic-num  { font-size: 2.6rem; font-weight: 900; line-height: 1; margin-bottom: .5rem; }
-    .ic.cyan   .ic-num { color: var(--cyan); }
-    .ic.blue   .ic-num { color: var(--blue); }
-    .ic.russia .ic-num { color: var(--russia); }
-    [data-theme="light"] .ic.cyan .ic-num { color: #0090a8; }
-    [data-theme="light"] .ic.blue .ic-num { color: #1a6abf; }
+    .ic-num  { font-size: 2.6rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: .5rem; }
+    [data-theme="light"] .ic-num { color: #c49000; }
     .ic-text { font-size: .8rem; color: var(--dim); line-height: 1.55; }
     .ic-text strong { color: var(--text); }
 
     /* ─── DONUTS ─── */
-    .donut-section { }
+    .donut-section {
+      margin-top: 1.5rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
     .donut-ctrl {
       display: flex; align-items: center;
       justify-content: space-between; gap: 1rem;
@@ -342,7 +336,7 @@
       flex-shrink: 0;
       width: 180px;
       margin-left: auto;
-      margin-right: 5rem;
+      margin-right: calc(4rem + 2cm);
       padding: 0.5rem 2rem 0.5rem 2rem;
       user-select: none;
     }
@@ -376,7 +370,7 @@
       transform-origin: center center;
     }
     .vacc-chart-area {
-      flex: 0 0 620px;
+      flex: 0 0 calc(460px + 4cm);
       height: 520px;
       margin-top: 90px;
     }
@@ -447,19 +441,6 @@
       color: var(--dim); font-size: .7rem;
       border-top: 1px solid var(--border);
     }
-    .prev-version-btn {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      margin-top: 0.9rem;
-      padding: 0.45rem 1.1rem;
-      background: var(--surf2); border: 1px solid var(--border);
-      border-radius: 6px; color: var(--dim); font-size: .7rem;
-      font-weight: 600; letter-spacing: .04em;
-      text-decoration: none; cursor: pointer;
-      transition: border-color .2s, color .2s;
-    }
-    .prev-version-btn:hover {
-      border-color: var(--text); color: var(--text);
-    }
     .corona-deco {
       position: absolute;
       top: 2rem;
@@ -474,81 +455,6 @@
     }
     [data-theme="light"] .corona-deco {
       color: #007a99;
-    }
-
-    /* ═══════════════════════════════════════════════════
-       RESPONSIVE
-       ═══════════════════════════════════════════════════ */
-
-    /* ── Wide screens (>1400px): content already capped at 1160px, just ensure
-          the hero padding doesn't look too compressed at the sides ── */
-    @media (min-width: 1400px) {
-      .hero { padding-left: 3rem; padding-right: 3rem; }
-    }
-
-    /* ── Narrow desktop / large tablet (≤1200px) ── */
-    @media (max-width: 1200px) {
-      .corona-deco { right: 8rem; width: 110px; height: 110px; }
-      .syringe-panel { margin-right: 2rem; }
-      .vacc-chart-area { flex: 1 1 auto; height: 460px; }
-    }
-
-    /* ── Tablet (≤900px) ── */
-    @media (max-width: 900px) {
-      body { padding-left: 32px; padding-right: 32px; }
-      .corona-deco { display: none; }
-      .vacc-layout { flex-wrap: wrap; }
-      .vacc-chart-area {
-        flex: 1 1 100%;
-        height: 380px;
-        margin-top: 0;
-      }
-      .syringe-panel {
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        padding: 1rem 0.5rem;
-        gap: 1.5rem;
-        justify-content: center;
-      }
-      .syringe-country { min-height: unset; margin-bottom: 0; }
-      .syringe-pct     { margin-bottom: 0; min-height: unset; }
-      .syringe-wrap    { width: 70px; flex: none; }
-    }
-
-    /* ── Mobile (≤600px) ── */
-    @media (max-width: 600px) {
-      body { padding-left: 16px; padding-right: 16px; }
-      html::before, html::after { width: 28px; }
-      body::before { left: 4px; }
-      body::after  { right: 4px; }
-      .hero { padding: 1.2rem 0.8rem 1.2rem; }
-      .main { padding: 1rem 0.5rem; }
-      .card { padding: 1rem; }
-      .hero h1 { font-size: clamp(1.3rem, 6vw, 1.9rem); }
-      .hero-sub { margin-bottom: 1.2rem; }
-      .kpi-row { grid-template-columns: 1fr 1fr; }
-      .kpi-val  { font-size: 1.5rem; }
-      .finding { padding: 0.8rem 1rem; }
-      .card-head { flex-direction: column; gap: 0.6rem; }
-      .syringe-panel { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2rem; }
-      .syringe-wrap  { width: 60px; flex: none; }
-      .vacc-chart-area { height: 300px; }
-      .donut-row { grid-template-columns: repeat(2, 1fr); }
-      .insight-row { grid-template-columns: 1fr; }
-      .ic-num { font-size: 1.8rem; }
-      .sources-list li { flex-direction: column; gap: 0.1rem; }
-      .sources-list li::before { display: none; }
-    }
-
-    /* ── Small mobile (≤380px) ── */
-    @media (max-width: 380px) {
-      body { padding-left: 10px; padding-right: 10px; }
-      .kpi-row { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 1.3rem; }
-      .kpi-val  { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -586,17 +492,8 @@
         <em>Not in Vaccines</em></h1>
     <p class="hero-sub">WHO / Our World in Data · 40 countries · 4+ years · ~430 000 data points</p>
 
-    <div class="finding">
-      <div class="tag">Main Finding</div>
-      <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
-        <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
-        of its population, nearly <strong>20 points below</strong> the EU average.</p>
-      <p class="finding-sub">Independent demographic estimates put Russia's true excess mortality at
-        <strong>2–3× the official figure</strong>.</p>
-    </div>
-
     <div class="kpi-row">
-      <div class="kpi cases">
+      <div class="kpi">
         <div class="kpi-lbl">Global Cases Reported</div>
         <div class="kpi-val" id="kGC">—</div>
         <div class="kpi-note">cumulative, as of Aug 2024</div>
@@ -611,7 +508,7 @@
         <div class="kpi-val" id="kRD">—</div>
         <div class="kpi-note" id="kRShare">— of Europe's toll</div>
       </div>
-      <div class="kpi vacc">
+      <div class="kpi">
         <div class="kpi-lbl">Russia Vaccination %</div>
         <div class="kpi-val" id="kRV">—</div>
         <div class="kpi-note">peak · EU avg ~80%</div>
@@ -622,6 +519,121 @@
 
 <!-- ═══════════ MAIN ═══════════ -->
 <div class="main">
+
+  <div class="finding">
+    <div class="tag">Main Finding</div>
+    <p>Russia officially recorded <strong>403 000 COVID deaths</strong> — the
+      <strong>highest toll in Europe</strong> — while vaccinating only <strong>61%</strong>
+      of its population, nearly <strong>20 points below</strong> the EU average.
+      Independent demographic estimates put Russia's true excess mortality at
+      <strong>2–3× the official figure</strong>.</p>
+  </div>
+
+  <!-- Timeline -->
+  <div class="sec">
+    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
+          <div class="card-sub">Worldwide total · 7-day smoothed</div>
+        </div>
+        <div class="ctrl-row">
+          <div class="btn-grp">
+            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
+            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
+            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+      </div>
+      <div class="cv" style="height:190px;margin-top:.8rem">
+        <canvas id="cTimeline"></canvas>
+      </div>
+      <div class="units-note">
+        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
+        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
+        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
+      </div>
+
+      <!-- ── Donut row ── -->
+      <div class="donut-section">
+        <div class="donut-ctrl">
+          <span class="donut-ctrl-lbl">Annual Distribution by Region</span>
+          <div class="btn-grp">
+            <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
+            <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
+            <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
+          </div>
+        </div>
+        <div class="donut-row">
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2020"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2020</div>
+                <div class="donut-center-sub" id="ds2020"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2021"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2021</div>
+                <div class="donut-center-sub" id="ds2021"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2022"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2022</div>
+                <div class="donut-center-sub" id="ds2022"></div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="d2023"></canvas>
+              <div class="donut-center">
+                <div class="donut-center-year">2023</div>
+                <div class="donut-center-sub" id="ds2023"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+        <div class="units-note">
+          <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+          <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
+          <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Regional + Europe -->
+  <div class="sec">
+    <div class="sec-lbl">Geographic Perspective</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Cases by Region</div>
+          <div class="card-sub">Cumulative totals, millions</div>
+        </div>
+      </div>
+      <div class="cv" style="height:380px">
+        <canvas id="cRegional"></canvas>
+      </div>
+      <div class="units-note">
+        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
+        <b>Cases (left axis)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
+        <b>COVID Deaths (right axis)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands.
+      </div>
+    </div>
+  </div>
 
   <!-- Vaccination -->
   <div class="sec">
@@ -739,106 +751,9 @@
     </div>
   </div>
 
-  <!-- Insight card — Russia vs EU (directly under vaccination) -->
-  <div class="insight-row" style="grid-template-columns:1fr;margin-top:-1rem">
-    <div class="ic russia">
-      <div class="ic-num">Russia vs EU</div>
-      <div class="ic-text">
-        Russia's vaccination coverage peaked at <strong>61%</strong> — roughly
-        <strong>20 percentage points below France (81%)</strong> and
-        <strong>Germany (78%)</strong>. Slow rollout of Sputnik V and widespread vaccine
-        hesitancy left a large share of the population exposed during the deadliest waves,
-        contributing to Europe's highest official COVID death toll.
-      </div>
-    </div>
-  </div>
-
-  <!-- Annual Distribution Donuts -->
-  <div class="sec">
-    <div class="sec-lbl">Annual Distribution by Region</div>
-    <div class="card">
-      <div class="donut-section">
-        <div class="donut-ctrl">
-          <span class="donut-ctrl-lbl">Breakdown by year — select metric</span>
-          <div class="btn-grp">
-            <button class="on" id="dCases"  onclick="setDonutMetric('cases')">Cases</button>
-            <button            id="dDeaths" onclick="setDonutMetric('deaths')">COVID Deaths</button>
-            <button            id="dVacc"   onclick="setDonutMetric('vacc')">Vaccinations</button>
-          </div>
-        </div>
-        <div class="donut-row">
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2020"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2020</div>
-                <div class="donut-center-sub" id="ds2020"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2021"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2021</div>
-                <div class="donut-center-sub" id="ds2021"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2022"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2022</div>
-                <div class="donut-center-sub" id="ds2022"></div>
-              </div>
-            </div>
-          </div>
-          <div class="donut-wrap">
-            <div class="donut-canvas-wrap">
-              <canvas id="d2023"></canvas>
-              <div class="donut-center">
-                <div class="donut-center-year">2023</div>
-                <div class="donut-center-sub" id="ds2023"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="donut-legend" id="donutLegend"></div>
-        <div class="units-note">
-          <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-          <b>Cases / COVID Deaths</b> — total officially confirmed reports summed over all weeks of the calendar year &nbsp;·&nbsp;
-          <b>Vaccinations</b> — estimated millions of people who had received at least one dose by end of that year.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Regional + Europe -->
-  <div class="sec">
-    <div class="sec-lbl">European Countries — Cases &amp; COVID Deaths</div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Europe: Cases &amp; Deaths by Country</div>
-          <div class="card-sub">Cumulative totals · Russia highlighted in red</div>
-        </div>
-      </div>
-      <div class="cv" style="height:380px">
-        <canvas id="cRegional"></canvas>
-      </div>
-      <div class="units-note">
-        <b>M</b> = millions &nbsp;·&nbsp; <b>K</b> = thousands &nbsp;·&nbsp;
-        <b>Cases (left axis, blue)</b> — cumulative confirmed cases since January 2020, in millions &nbsp;·&nbsp;
-        <b>COVID Deaths (right axis, red)</b> — cumulative officially confirmed COVID-attributed deaths since January 2020, in thousands &nbsp;·&nbsp;
-        <b>Russia</b> — bold red border on both bars.
-      </div>
-    </div>
-  </div>
-
-  <!-- Insight cards — Omicron + China Reopening -->
+  <!-- Insight cards -->
   <div class="insight-row">
-    <div class="ic cyan">
+    <div class="ic">
       <div class="ic-num">Omicron Peak</div>
       <div class="ic-text">
         In January 2022 the <strong>Omicron variant</strong> pushed weekly global cases to an
@@ -847,44 +762,15 @@
         lethality in most of the world.
       </div>
     </div>
-    <div class="ic blue">
-      <div class="ic-num">Dec 2022 Wave</div>
+    <div class="ic">
+      <div class="ic-num">Russia vs EU</div>
       <div class="ic-text">
-        In December 2022 China abruptly ended its Zero-COVID policy, triggering an estimated
-        <strong>1 billion infections</strong> within weeks — the largest single-country
-        outbreak of the pandemic. Simultaneously, the <strong>XBB subvariant</strong> drove
-        renewed waves across Europe and North America, though global mortality remained
-        far below earlier peaks thanks to widespread immunity and updated vaccines.
+        Russia's vaccination coverage peaked at <strong>61%</strong> — roughly
+        <strong>20 percentage points below France (81%)</strong> and
+        <strong>Germany (78%)</strong>. Slow rollout of Sputnik V and widespread vaccine
+        hesitancy left a large share of the population exposed during the deadliest waves,
+        contributing to Europe's highest official COVID death toll.
       </div>
-    </div>
-  </div>
-
-  <!-- Timeline -->
-  <div class="sec">
-    <div class="sec-lbl">Global Pandemic Timeline — 7-Day Smoothed New Cases / COVID Deaths</div>
-    <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Global Wave Timeline, 2020 – 2024</div>
-          <div class="card-sub">Worldwide total · 7-day smoothed</div>
-        </div>
-        <div class="ctrl-row">
-          <div class="btn-grp">
-            <button class="on" id="bCases"  onclick="setMetric('cases')">Cases</button>
-            <button        id="bDeaths" onclick="setMetric('deaths')">COVID Deaths</button>
-            <button        id="bVacc"   onclick="setMetric('vacc')">Vaccinations</button>
-          </div>
-        </div>
-      </div>
-      <div class="cv" style="height:190px;margin-top:.8rem">
-        <canvas id="cTimeline"></canvas>
-      </div>
-      <div class="units-note">
-        <b>7-day smoothed</b> — each point is the rolling 7-day average of new reports, reducing day-of-week noise in official data. &nbsp;
-        <b>Y-axis</b> — number of newly reported cases or COVID-attributed deaths in that 7-day window worldwide. &nbsp;
-        <b>% vaccinated</b> — share of the global population that received at least one dose by that date.
-      </div>
-
     </div>
   </div>
 
@@ -910,9 +796,9 @@
 
 <footer>
   COVID-19 Global Pandemic Dashboard &nbsp;·&nbsp; Data as of Aug 2024 &nbsp;·&nbsp;
-  40 countries &amp; regional aggregates
+  40 countries &amp; regional aggregates &nbsp;·&nbsp; <em>Snapshot: May 31, 2026</em>
   <br>
-  <a class="prev-version-btn" href="index-may31.html">&#x25C4; Previous version (May 31)</a>
+  <a href="index.html" style="display:inline-flex;align-items:center;gap:.4rem;margin-top:.9rem;padding:.45rem 1.1rem;background:var(--surf2);border:1px solid var(--border);border-radius:6px;color:var(--dim);font-size:.7rem;font-weight:600;letter-spacing:.04em;text-decoration:none;">&#x25BA; Current version</a>
 </footer>
 
 <script>
@@ -1032,7 +918,7 @@ function makeDatasets() {
   const vals   = entry.data.map(d =>
     metric === 'cases' ? d.nc : metric === 'deaths' ? d.nd : d.vp
   );
-  const color = metric === 'vacc' ? '#2ed573' : metric === 'deaths' ? '#ff7070' : '#3d9cf5';
+  const color = isVacc ? '#2ed573' : '#4dd0e1';
   const datasets = [{
     label:           isVacc ? 'Vaccinated (%)' : 'World',
     data:            vals,
@@ -1084,57 +970,6 @@ const YEAR_LINES = {
   }
 };
 
-/* Events shown as vertical markers on the timeline */
-const TIMELINE_EVENTS = [
-  { date: '2020-08-11', label: 'Sputnik V',    color: '#2ed573', row: 0 },
-  { date: '2020-12-08', label: 'Pfizer',        color: '#2ed573', row: 1 },
-  { date: '2021-01-05', label: 'Wave 2 peak',   color: '#3d9cf5', row: 0 },
-  { date: '2021-04-20', label: 'J&J / AZ',      color: '#2ed573', row: 1 },
-  { date: '2021-09-07', label: 'Delta peak',    color: '#3d9cf5', row: 0 },
-  { date: '2022-01-17', label: 'Omicron peak',  color: '#ff7070', row: 1 },
-  { date: '2022-12-07', label: 'China reopens', color: '#3d9cf5', row: 0 },
-];
-
-const EVENT_MARKERS = {
-  id: 'eventMarkers',
-  afterDatasetsDraw(chart) {
-    const { ctx, scales: { x }, chartArea, data } = chart;
-    const labels = data.labels;
-    if (!labels || !x) return;
-
-    TIMELINE_EVENTS.forEach(evt => {
-      const idx = labels.findIndex(l => l >= evt.date);
-      if (idx === -1) return;
-      const xPos = x.getPixelForValue(idx);
-      if (xPos < chartArea.left || xPos > chartArea.right) return;
-
-      ctx.save();
-
-      /* Dot and label ABOVE the chart area */
-      const dotY = chartArea.top - 28 + evt.row * 16;
-      ctx.beginPath();
-      ctx.arc(xPos, dotY, 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = evt.color;
-      ctx.fill();
-
-      /* Vertical line from dot down to chart bottom */
-      ctx.beginPath();
-      ctx.moveTo(xPos, dotY + 4);
-      ctx.lineTo(xPos, chartArea.bottom);
-      ctx.strokeStyle = evt.color + '55';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      /* Label to the right of dot */
-      ctx.font = '600 8.5px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-      ctx.fillStyle = evt.color;
-      ctx.textAlign = 'left';
-      ctx.fillText(evt.label, xPos + 6, dotY + 3.5);
-      ctx.restore();
-    });
-  }
-};
-
 function buildTimeline() {
   const tc = themeColors();
   const { labels, datasets } = makeDatasets();
@@ -1145,10 +980,9 @@ function buildTimeline() {
   charts.timeline = new Chart(ctx, {
     type: 'line',
     data: { labels, datasets },
-    plugins: [YEAR_LINES, EVENT_MARKERS],
+    plugins: [YEAR_LINES],
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: { padding: { top: 42 } },
       interaction: { intersect: false, mode: 'index' },
       plugins: {
         legend: { display: false },
@@ -1215,29 +1049,19 @@ function setMetric(m) {
 /* ═══════════════════════════════════════════════════
    REGIONAL
    ═══════════════════════════════════════════════════ */
-/* REGIONS_CFG used by donut charts only */
 const REGIONS_CFG = [
-  { n: 'Africa',        c: '#f368e0' },
+  { n: 'Africa',        c: '#ab47bc' },
   { n: 'Asia',          c: '#ffd32a' },
   { n: 'Europe',        c: '#a46ef0' },
   { n: 'North America', c: '#ff9f43' },
-  { n: 'South America', c: '#2ed573' },
+  { n: 'South America', c: '#1dd1a1' },
   { n: 'Oceania',       c: '#4dd0e1' },
 ];
 
-/* European countries for the bar chart */
-const EUROPE_CFG = [
-  'France','Germany','Italy','Poland','Russia',
-  'Spain','Turkey','Ukraine','United Kingdom'
-];
-
 function buildRegional() {
-  const tc  = themeColors();
-  const BLUE = '#3d9cf5';
-  const DRED = '#ff7070';
+  const tc   = themeColors();
+  const BASE = isDark ? '#4dd0e1' : '#0090a8';
   hoveredRegionIdx = -1;
-
-  const isRussia = n => n === 'Russia';
 
   const ctx = document.getElementById('cRegional').getContext('2d');
   if (charts.regional) charts.regional.destroy();
@@ -1271,24 +1095,26 @@ function buildRegional() {
     type: 'bar',
     plugins: [barLabelsPlugin],
     data: {
-      labels: EUROPE_CFG.map(n => n === 'United Kingdom' ? 'UK' : n),
+      labels: REGIONS_CFG.map(r => r.n),
       datasets: [
         {
           label: 'Cases (M)',
-          data:            EUROPE_CFG.map(n => (DATA[n]?.tc || 0) / 1e6),
-          backgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404022' : BLUE + '44'),
-          borderColor:     EUROPE_CFG.map(n => isRussia(n) ? '#ff4040'   : BLUE),
-          borderWidth:     EUROPE_CFG.map(n => isRussia(n) ? 3 : 1.5),
-          hoverBackgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404055' : BLUE + 'aa'),
+          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.tc || 0) / 1e6),
+          backgroundColor:      REGIONS_CFG.map(() => BASE + '44'),
+          borderColor:          REGIONS_CFG.map(() => BASE),
+          hoverBackgroundColor: REGIONS_CFG.map(r => r.c + 'cc'),
+          hoverBorderColor:     REGIONS_CFG.map(r => r.c),
+          borderWidth: 1.5,
           yAxisID: 'yC'
         },
         {
           label: 'COVID Deaths (K)',
-          data:            EUROPE_CFG.map(n => (DATA[n]?.td || 0) / 1e3),
-          backgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff404044' : DRED + '44'),
-          borderColor:     EUROPE_CFG.map(n => isRussia(n) ? '#ff4040'   : DRED),
-          borderWidth:     EUROPE_CFG.map(n => isRussia(n) ? 3 : 1.5),
-          hoverBackgroundColor: EUROPE_CFG.map(n => isRussia(n) ? '#ff4040bb' : DRED + 'aa'),
+          data:                 REGIONS_CFG.map(r => (DATA[r.n]?.td || 0) / 1e3),
+          backgroundColor:      '#ff404044',
+          borderColor:          '#ff4040',
+          hoverBackgroundColor: '#ff4040bb',
+          hoverBorderColor:     '#ff4040',
+          borderWidth: 1.5,
           yAxisID: 'yD'
         }
       ]
@@ -1311,14 +1137,12 @@ function buildRegional() {
           grid:   { color: tc.grid },
           border: { color: tc.border },
           ticks: {
-            color: c => {
-              if (EUROPE_CFG[c.index] === 'Russia') return '#ff4040';
-              if (hoveredRegionIdx === c.index) return BLUE;
-              return tc.tick;
-            },
+            color: c => hoveredRegionIdx === c.index
+              ? (REGIONS_CFG[c.index]?.c || tc.tick)
+              : tc.tick,
             font: c => ({
               size:   11,
-              weight: (EUROPE_CFG[c.index] === 'Russia' || hoveredRegionIdx === c.index) ? '700' : '400',
+              weight: hoveredRegionIdx === c.index ? '700' : '400',
             }),
           }
         },
@@ -1326,13 +1150,13 @@ function buildRegional() {
           type: 'linear', position: 'left',
           grid:   { color: tc.grid },
           border: { color: tc.border },
-          ticks:  { color: BLUE, callback: v => v + 'M' }
+          ticks:  { color: isDark ? '#4dd0e1' : '#0090a8', callback: v => v + 'M' }
         },
         yD: {
           type: 'linear', position: 'right',
           grid:   { drawOnChartArea: false },
           border: { color: tc.border },
-          ticks:  { color: DRED, callback: v => v + 'K' }
+          ticks:  { color: '#ff7070', callback: v => v + 'K' }
         }
       }
     }
