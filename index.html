@@ -493,12 +493,21 @@
       position: absolute;
       top: 2rem;
       right: 16rem;
-      width: 155px;
-      height: 155px;
-      opacity: 0.9;
+      width: 150px;
+      height: 150px;
       z-index: 10;
       display: block;
       pointer-events: none;
+      object-fit: contain;
+      /* dark mode: invert makes white→black (invisible with screen), blue stays blue */
+      filter: invert(1) hue-rotate(180deg);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+    }
+    [data-theme="light"] .corona-deco {
+      filter: none;
+      mix-blend-mode: multiply;
+      opacity: 0.8;
     }
 
     /* ═══════════════════════════════════════════════════
@@ -513,7 +522,7 @@
 
     /* ── Narrow desktop / large tablet (≤1200px) ── */
     @media (max-width: 1200px) {
-      .corona-deco { right: 8rem; top: 4rem; width: 100px; height: 100px; }
+      .corona-deco { right: 8rem; top: 4rem; width: 120px; height: 120px; }
       .syringe-panel { margin-right: 2rem; }
       .vacc-chart-area { flex: 1 1 auto; height: 460px; }
     }
@@ -585,88 +594,8 @@
 
 <!-- ═══════════ HERO ═══════════ -->
 <div class="hero">
-  <!-- Coronavirus illustration based on photorealistic 3D render -->
-  <svg class="corona-deco" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <!-- Body: rich blue, strong 3D shading -->
-      <radialGradient id="coronaBody" cx="34%" cy="30%" r="66%">
-        <stop offset="0%"   stop-color="#5580c0"/>
-        <stop offset="22%"  stop-color="#1e4a90"/>
-        <stop offset="58%"  stop-color="#0c2560"/>
-        <stop offset="100%" stop-color="#040e2e"/>
-      </radialGradient>
-      <!-- Spike: same blue family, slightly lighter -->
-      <radialGradient id="coronaSpike" cx="28%" cy="24%" r="72%">
-        <stop offset="0%"   stop-color="#6699dd"/>
-        <stop offset="100%" stop-color="#0e2a6a"/>
-      </radialGradient>
-      <!-- Outer soft halo -->
-      <radialGradient id="coronaHalo" cx="50%" cy="50%" r="50%">
-        <stop offset="58%"  stop-color="#000000" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#1a3a99" stop-opacity="0.18"/>
-      </radialGradient>
-      <!-- Body texture via turbulence -->
-      <filter id="bodyTex" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" seed="5" result="noise"/>
-        <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
-        <feComponentTransfer in="grayNoise" result="faintNoise">
-          <feFuncA type="linear" slope="0.22"/>
-        </feComponentTransfer>
-        <feBlend in="SourceGraphic" in2="faintNoise" mode="multiply"/>
-      </filter>
-      <clipPath id="bodyClip"><circle cx="110" cy="110" r="64"/></clipPath>
-      <filter id="sh"><feDropShadow dx="4" dy="6" stdDeviation="6" flood-color="#00000099"/></filter>
-    </defs>
-
-    <!-- Soft outer halo -->
-    <circle cx="110" cy="110" r="108" fill="url(#coronaHalo)"/>
-
-    <!-- Chalice / trumpet spikes — narrow neck, wide flared top (S-protein trimer) -->
-    <!-- path: base ±6 at y=-70 → neck ±2 at y=-90 → flared cup ±11 at y=-96 → top at y=-104 -->
-    <g fill="url(#coronaSpike)">
-      <g transform="translate(110,110) rotate(0)">  <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(18)"> <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(36)"> <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(54)"> <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(72)"> <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(90)"> <path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(108)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(126)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(144)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(162)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(180)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(198)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(216)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(234)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(252)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(270)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(288)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(306)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(324)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-      <g transform="translate(110,110) rotate(342)"><path d="M-6,-70 C-5,-80 -2,-87 -2,-91 C-4,-93 -11,-94 -11,-98 C-11,-102 -7,-105 0,-105 C7,-105 11,-102 11,-98 C11,-94 4,-93 2,-91 C2,-87 5,-80 6,-70Z"/></g>
-    </g>
-
-    <!-- Body with 3D gradient + shadow -->
-    <circle cx="110" cy="110" r="64" fill="url(#coronaBody)" filter="url(#sh)"/>
-    <!-- Surface texture overlay -->
-    <circle cx="110" cy="110" r="64" fill="url(#coronaBody)" filter="url(#bodyTex)" clip-path="url(#bodyClip)" opacity="0.55"/>
-    <!-- Pore / socket indentations (visible in reference) -->
-    <g clip-path="url(#bodyClip)" fill="#04102e" opacity="0.55">
-      <ellipse cx="108" cy="90"  rx="7"   ry="6"/>
-      <ellipse cx="126" cy="106" rx="6"   ry="5.5"/>
-      <ellipse cx="99"  cy="118" rx="6"   ry="5"/>
-      <ellipse cx="118" cy="127" rx="5.5" ry="4.5"/>
-      <ellipse cx="90"  cy="102" rx="5"   ry="4.5"/>
-      <ellipse cx="121" cy="91"  rx="4.5" ry="4"/>
-    </g>
-    <!-- Rim highlight -->
-    <circle cx="110" cy="110" r="64" fill="none" stroke="#3a66bb" stroke-width="2" opacity="0.5"/>
-    <!-- Main specular highlight (top-left per reference) -->
-    <ellipse cx="87" cy="81" rx="25" ry="18" fill="white" opacity="0.22"/>
-    <ellipse cx="83" cy="77" rx="9"  ry="6"  fill="white" opacity="0.42"/>
-    <!-- Faint secondary highlight (bottom-right rim) -->
-    <path d="M150,140 Q158,124 150,108" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.08"/>
-  </svg>
+  <!-- Decorative coronavirus illustration -->
+  <img class="corona-deco" src="1000_F_2012813740_EE8Edi9pwjQlSChE5C4LAQqp24uSQeWx.webp" alt="" aria-hidden="true">
   <div class="hero-inner">
     <div class="hero-top">
       <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
