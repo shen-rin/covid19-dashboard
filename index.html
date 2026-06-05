@@ -492,6 +492,11 @@
     @keyframes coronaSpin {
       to { transform: rotate(360deg); }
     }
+    @keyframes coronaFall {
+      0%   { transform: translateY(0)      rotate(0deg);   opacity: 0.9; }
+      80%  { opacity: 0.7; }
+      100% { transform: translateY(110vh)  rotate(720deg); opacity: 0; }
+    }
     .corona-deco {
       position: absolute;
       top: 2rem;
@@ -500,11 +505,11 @@
       height: 150px;
       z-index: 10;
       display: block;
-      pointer-events: none;
+      pointer-events: auto;
+      cursor: pointer;
       object-fit: cover;
       object-position: 56% 50%;
       border-radius: 50%;
-      /* dark mode: invert makes white→black (invisible with screen), blue stays blue */
       filter: invert(1) hue-rotate(180deg);
       mix-blend-mode: screen;
       opacity: 0.9;
@@ -515,6 +520,23 @@
       filter: none;
       mix-blend-mode: multiply;
       opacity: 0.8;
+    }
+    .corona-particle {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: 56% 50%;
+      pointer-events: none;
+      z-index: 99999;
+      filter: invert(1) hue-rotate(180deg);
+      mix-blend-mode: screen;
+      animation: coronaFall linear forwards;
+    }
+    [data-theme="light"] .corona-particle {
+      filter: none;
+      mix-blend-mode: multiply;
     }
 
     /* ═══════════════════════════════════════════════════
@@ -980,6 +1002,27 @@ function toggleTheme() {
   applyTheme();
   if (DATA) rebuildAllCharts();
 }
+
+/* ── Corona rain Easter egg ── */
+document.querySelector('.corona-deco').addEventListener('click', function(e) {
+  const count = 12 + Math.floor(Math.random() * 8);
+  for (let i = 0; i < count; i++) {
+    const img = document.createElement('img');
+    img.src = this.src;
+    img.className = 'corona-particle';
+    const size = 24 + Math.random() * 36;
+    img.style.width  = size + 'px';
+    img.style.height = size + 'px';
+    img.style.left   = (Math.random() * window.innerWidth) + 'px';
+    img.style.top    = '-50px';
+    const dur = 2.2 + Math.random() * 2.4;
+    const delay = Math.random() * 0.6;
+    img.style.animationDuration = dur + 's';
+    img.style.animationDelay    = delay + 's';
+    document.body.appendChild(img);
+    img.addEventListener('animationend', () => img.remove());
+  }
+});
 
 function themeColors() {
   return isDark ? {
