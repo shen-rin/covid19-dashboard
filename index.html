@@ -412,7 +412,7 @@
     /* SVG element classes */
     .syr-metal { fill: var(--syr-metal); }
     .syr-barrel { fill: none; stroke: var(--syr-metal); stroke-width: 1.5; }
-    .syr-liquid { fill: #00bcd4; opacity: 0.58; transition: none; }
+    .syr-liquid { fill: #2ed573; opacity: 0.58; transition: none; }
     .syr-bubble { fill: rgba(255,255,255,0.55); }
     .syr-mark { stroke: var(--syr-metal); stroke-width: 1.2; }
     .syr-tick { stroke: var(--syr-metal); stroke-width: 0.8; opacity: 0.6; }
@@ -1781,12 +1781,12 @@ function buildVacc() {
         backgroundColor: pts.map(p => {
           if (p.c === 'Russia') return '#ff404055';
           const t = Math.min(1, p.v / 100);
-          return `hsla(${Math.round(30 + t * 160)}, 65%, 55%, 0.38)`;
+          return `rgba(46, 213, 115, ${(0.15 + t * 0.45).toFixed(2)})`;
         }),
         borderColor: pts.map(p => {
           if (p.c === 'Russia') return '#ff4040';
           const t = Math.min(1, p.v / 100);
-          return `hsl(${Math.round(30 + t * 160)}, 65%, 55%)`;
+          return `rgba(46, 213, 115, ${(0.5 + t * 0.5).toFixed(2)})`;
         }),
         borderWidth: 1.5,
         borderRadius: { topRight: 6, bottomRight: 6, topLeft: 0, bottomLeft: 0 },
