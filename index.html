@@ -489,6 +489,9 @@
     .prev-version-btn:hover {
       border-color: var(--text); color: var(--text);
     }
+    @keyframes coronaSpin {
+      to { transform: rotate(360deg); }
+    }
     .corona-deco {
       position: absolute;
       top: 2rem;
@@ -498,12 +501,15 @@
       z-index: 10;
       display: block;
       pointer-events: none;
-      object-fit: contain;
-      clip-path: circle(42% at 53% 48%);
+      object-fit: cover;
+      object-position: 56% 50%;
+      border-radius: 50%;
       /* dark mode: invert makes white→black (invisible with screen), blue stays blue */
       filter: invert(1) hue-rotate(180deg);
       mix-blend-mode: screen;
       opacity: 0.9;
+      animation: coronaSpin 24s linear infinite;
+      transform-origin: 50% 50%;
     }
     [data-theme="light"] .corona-deco {
       filter: none;
