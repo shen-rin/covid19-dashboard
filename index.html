@@ -497,14 +497,16 @@
       80%  { opacity: 0.7; }
       100% { transform: translateY(110vh)  rotate(720deg); opacity: 0; }
     }
+    .hero-top-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+    }
     .corona-deco {
-      position: absolute;
-      top: 2rem;
-      right: 16rem;
-      width: 150px;
-      height: 150px;
-      z-index: 10;
       display: block;
+      width: 44px;
+      height: 44px;
       pointer-events: auto;
       cursor: pointer;
       object-fit: cover;
@@ -515,11 +517,12 @@
       opacity: 0.9;
       animation: coronaSpin 24s linear infinite;
       transform-origin: 50% 50%;
+      flex-shrink: 0;
     }
     [data-theme="light"] .corona-deco {
       filter: none;
       mix-blend-mode: multiply;
-      opacity: 0.8;
+      opacity: 0.85;
     }
     .corona-particle {
       position: fixed;
@@ -551,14 +554,12 @@
 
     /* ── Narrow desktop / large tablet (≤1200px) ── */
     @media (max-width: 1200px) {
-      .corona-deco { right: 8rem; top: 4rem; width: 120px; height: 120px; }
       .vacc-chart-area { flex: 1 1 auto; height: 460px; }
     }
 
     /* ── Tablet (≤900px) ── */
     @media (max-width: 900px) {
       body { padding-left: 32px; padding-right: 32px; }
-      .corona-deco { display: none; }
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
       .vacc-layout { flex-wrap: wrap; }
       .vacc-chart-area {
@@ -622,12 +623,13 @@
 
 <!-- ═══════════ HERO ═══════════ -->
 <div class="hero">
-  <!-- Decorative coronavirus illustration -->
-  <img class="corona-deco" src="1000_F_2012813740_EE8Edi9pwjQlSChE5C4LAQqp24uSQeWx.webp" alt="" aria-hidden="true">
   <div class="hero-inner">
     <div class="hero-top">
       <div class="badge">COVID-19 Global Analysis · 2020 – 2024</div>
-      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark Mode</button>
+      <div class="hero-top-right">
+        <img class="corona-deco" src="1000_F_2012813740_EE8Edi9pwjQlSChE5C4LAQqp24uSQeWx.webp" alt="" aria-hidden="true">
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark Mode</button>
+      </div>
     </div>
 
     <h1>Russia Led Europe in Deaths,<br>
